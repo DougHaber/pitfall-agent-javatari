@@ -10,9 +10,36 @@ jt.M6502 = function() {
     this.powerOff = function() {
     };
 
+    var PC_watch_address = undefined; // Program Counter address to watch
+    var PC_watch_callback = undefined; // Function to call when a match occurs
+
+    this.setPCWatchCallback = function(address, handler) {
+	PC_watch_address = address;
+	PC_watch_callback = handler;
+    };
+
+    this.clearPCWatchCallback = function() {
+	PC_watch_address = undefined;
+	PC_watch_callback = undefined;
+    };
+
     this.clockPulse = function() {
         if (!RDY) return;      // TODO Should be ignored in the last cycle of the instruction
         T++;
+        cycles++;
+
+	if (PC_watch_callback && PC_watch_address == PC) {
+	    PC_watch_callback(cycles);
+
+	    if (PC != PC_watch_address) { // If a reset occurred
+		return;
+	    }
+	}
+
+        if (this.onClockPulse) {
+            this.onClockPulse(cycles);
+        }
+
         instruction[T]();
     };
 
@@ -27,15 +54,20 @@ jt.M6502 = function() {
     this.reset = function() {
         I = 1;
         T = -1;
+        cycles = 0;
         instruction = [ fetchOpcodeAndDecodeInstruction ];    // Bootstrap instruction
         PC = bus.read(RESET_VECTOR) | (bus.read(RESET_VECTOR + 1) << 8);
         this.setRDY(true);
     };
 
+    this.getCycles = function() {
+        return cycles;
+    }
 
     // Interfaces
     var bus;
     var RDY = false;
+    var cycles = 0;
 
     // Registers
     var PC = 0;
@@ -89,6 +121,8 @@ jt.M6502 = function() {
     //noinspection JSUnusedGlobalSymbols
     this.trace = false;
 
+    // When defined, call this function every clock pulse
+    this.onClockPulse = undefined;
 
     // Internal operations
 

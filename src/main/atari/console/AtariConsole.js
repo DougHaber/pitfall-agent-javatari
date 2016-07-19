@@ -2,6 +2,7 @@
 
 jt.AtariConsole = function() {
     var self = this;
+    var agent; // Used for executing the PitfallAgent upon cartridge load
 
     function init() {
         mainComponentsCreate();
@@ -31,6 +32,7 @@ jt.AtariConsole = function() {
 
         controlsSocket.clockPulse();
         tia.frame();
+
         this.framesGenerated++;
     };
 
@@ -71,6 +73,10 @@ jt.AtariConsole = function() {
         var removedCartridge = getCartridge();
         bus.setCartridge(cartridge);
         cartridgeSocket.cartridgeInserted(cartridge, removedCartridge);
+
+	if (! agent) {
+	    agent = new PitfallAgent(self);
+	}
     };
 
     var getCartridge = function() {
@@ -151,13 +157,13 @@ jt.AtariConsole = function() {
         controlsSocket.controlsStatesRedefined();
     };
 
-    var mainClockAdjustToNormal = function() {
+    var mainClockAdjustToNormal = this.mainClockAdjustToNormal = function() {
         var freq = videoStandard.fps;
         mainClock.setFrequency(freq);
         tia.getAudioOutput().setFps(freq);
     };
 
-    var mainClockAdjustToFast    = function() {
+    var mainClockAdjustToFast = this.mainClockAdjustToFast = function(freq) {
         var freq = 600;     // About 10x faster
         mainClock.setFrequency(freq);
         tia.getAudioOutput().setFps(freq);
@@ -491,6 +497,21 @@ jt.AtariConsole = function() {
         jt.Util.log(frames / (duration/1000) + "frames/sec");
         go();
     };
+
+    // Internal State Access  ------------------------------------------------------
+
+    this.getRAM = function() {
+	return ram;
+    };
+
+    this.getCPU = function() {
+	return cpu;
+    };
+
+    this.getBus = function() {
+	return bus;
+    };
+
 
 
     init();

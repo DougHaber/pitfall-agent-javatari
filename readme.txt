@@ -1,1 +1,0 @@
-Javatari for Javascript!

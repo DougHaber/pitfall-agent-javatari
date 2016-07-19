@@ -71,7 +71,8 @@ module.exports = function (grunt) {
                     "src/main/room/settings/Settings.js",
                     "src/main/room/settings/SettingsGUI.js",
                     "src/main/room/Room.js",
-                    "src/main/room/Launcher.js"
+                    "src/main/room/Launcher.js",
+		    "src/agent/PitfallAgent.js"
                 ],
                 dest: "temp/javatari.part.concat.js"
             },
