@@ -59,7 +59,7 @@ function PitfallAgent(atariConsole) {
 	else if (! this.controlStates.right && Math.random() > 0.5) { // If we aren't going right, go right
 	    this.scheduleCommand(cpuCycle, 'right');
 	}
-	else if (this.controlStates.right && Math.random() > 0.85) { // Stop
+	else if (this.controlStates.right && Math.random() > 0.9) { // Stop
 	    this.scheduleCommand(cpuCycle, 'rightRelease');
 	}
 	else {
