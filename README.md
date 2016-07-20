@@ -50,6 +50,8 @@ Javatari.js was a great platform for writing this on top of. The code was very c
 
 Some functions were converted to public interfaces and new functions were added to provide access to private resources (ram, cpu, bus.) Event hooks were added so that we can get a call each CPU cycle (for input injection) and every time the PC matched a value.  The latter was set against a VSYNC completing, and used to check on and update the game state.  A cycle counter was also added, so that we could be sure input was injected at the same point each run.
 
+All sources of randomness in Javatari.js were removed in order to keep the emulator completely deterministic.
+
 
 ## Notes on the Internals
 

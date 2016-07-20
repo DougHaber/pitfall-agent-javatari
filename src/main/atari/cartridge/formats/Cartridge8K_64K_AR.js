@@ -174,7 +174,10 @@ jt.Cartridge8K_64K_AR = function(rom, format) {
         bytes[BIOS_BANK_OFFSET + BIOS_INT_CONTROL_REG_ADDR - 0xf800] = romControlRegister;
         bytes[BIOS_BANK_OFFSET + BIOS_INT_PART_NO_ADDR - 0xf800] = romMultiLoadIndex;
         // TODO This random is a source of indeterminism. Potential problem in multiplayer sync
-        bytes[BIOS_BANK_OFFSET + BIOS_INT_RANDOM_SEED_ADDR - 0xf800] = ((Math.random() * 256) | 0);
+//        bytes[BIOS_BANK_OFFSET + BIOS_INT_RANDOM_SEED_ADDR - 0xf800] = ((Math.random() * 256) | 0);
+
+	// Pitfall-agent: Replace the random value with 0 to keep things deterministic.
+        bytes[BIOS_BANK_OFFSET + BIOS_INT_RANDOM_SEED_ADDR - 0xf800] = 0;
         bytes[BIOS_BANK_OFFSET + BIOS_INT_START_ADDR - 0xf800] = romStartupAddress & 0xff;
         bytes[BIOS_BANK_OFFSET + BIOS_INT_START_ADDR + 1 - 0xf800] = (romStartupAddress >> 8) & 0xff;
         signalPartLoadedOK(true);
