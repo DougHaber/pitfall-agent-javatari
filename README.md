@@ -64,9 +64,18 @@ A small user interface is added after inserting a cartidge that allows controls 
 
 # Known Issues
 
+## Drift
+
+Occasionally when loading a saved run things will be slightly out of sync, and so the instructions that previously worked will fail.  It isn't yet clear what causes this.   Input is injected the same way at the same CPU cycle, so this should not be possible.  There must either be a bug or an incorrect assumption over how things work.
+
+Often times this can be remedied by reloading and trying again.
+
+* [Issue Tracking](https://github.com/DougHaber/pitfall-agent-javatari/issues/1)
+
+
 ## Running Simultaneous Copies
 
-Running multiple copies of this or Javatari is not supported.  Saved states are placed in localStorage.  Multiple copies of the game will clobber each other's saves and have undesirable results.
+Running multiple copies of this or Javatari in the same browser is not supported.  Saved states are placed in localStorage.  Multiple copies of the game will clobber each other's saves and have undesirable results.
 
 
 # License
