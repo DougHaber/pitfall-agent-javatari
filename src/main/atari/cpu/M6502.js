@@ -26,10 +26,10 @@ jt.M6502 = function() {
     this.clockPulse = function() {
         if (!RDY) return;      // TODO Should be ignored in the last cycle of the instruction
         T++;
-        cycles++;
+        numCycles++;
 
 	if (PC_watch_callback && PC_watch_address == PC) {
-	    PC_watch_callback(cycles);
+	    PC_watch_callback(numCycles);
 
 	    if (PC != PC_watch_address) { // If a reset occurred
 		return;
@@ -37,7 +37,7 @@ jt.M6502 = function() {
 	}
 
         if (this.onClockPulse) {
-            this.onClockPulse(cycles);
+            this.onClockPulse(numCycles);
         }
 
         instruction[T]();
@@ -54,14 +54,14 @@ jt.M6502 = function() {
     this.reset = function() {
         I = 1;
         T = -1;
-        cycles = 0;
+        numCycles = 0;
         instruction = [ fetchOpcodeAndDecodeInstruction ];    // Bootstrap instruction
         PC = bus.read(RESET_VECTOR) | (bus.read(RESET_VECTOR + 1) << 8);
         this.setRDY(true);
     };
 
     this.getCycles = function() {
-        return cycles;
+        return numCycles;
     }
 
     // Interfaces
