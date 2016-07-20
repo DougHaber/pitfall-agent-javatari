@@ -15,6 +15,10 @@ The controls of Javatari have not been disabled.  Using game controls can mess u
 
 Once the game is running there isn't much to do other than watch and check back occasionally.  Some of the screens will be beat in minutes, but the more challenging ones can take many hours to solve.
 
+A small user interface is added after inserting a cartidge.  This provides checkboxes for determining whether to run at a faster speed and use checkpointing.  Both of these options help the training go faster.  Running at faster speed makes the game go quicker than its normal rate.  This may distort the audio.   Checkpointing is used to save the state from the beginning of the screen, so that each training cycle doesn't have to start all the way back at the beginning.
+
+The UI also provides 3 buttons.  The "Reset Training" button will remove all training data in use and stored by the browser.  The "Download State File" takes the currently checkpointed training state (up to the current screen) and downloads it.   The "Load pitfall-state.json" will load that file from the web server and use its state.  Loading a file requires that that the game be running on an actual webserver, rather than via `file://` URLs.
+
 
 ## Logging
 
@@ -59,7 +63,7 @@ LocalStorage is used to store the game state at the time of a checkpoint so that
 
 The game defaults to running at a faster than normal clock speed so that it can train quicker.
 
-A small user interface is added after inserting a cartidge that allows controls over whether checkpointing and the faster clockrate are enabled.  It also has a button that clears out the training data when pressed, including localStorage.
+These options can be controlled via the UI or APIs.
 
 
 # Known Issues

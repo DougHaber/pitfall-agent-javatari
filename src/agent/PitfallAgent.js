@@ -419,6 +419,7 @@ function PitfallAgent(atariConsole) {
 	    return true;
 	}
 	else {
+	    this.log(0, "ERROR: Failed to parse JSON from LocalStorage: No LocalStorage State");
 	    return false;
 	}
     }
@@ -478,6 +479,51 @@ function PitfallAgent(atariConsole) {
     };
 
 
+    this.saveStateToFile = function() {
+	// Create a downloadable JSON file of the current state in LocalStorage
+	var data = new Blob([ localStorage.getItem('pitfallAgentCommands') ], { type: 'text/plain' });
+	var url = window.URL.createObjectURL(data);
+	var a = document.createElement('a');
+	var event = document.createEvent("MouseEvents");
+
+	a.href = url;
+	a['download'] = 'pitfall-state.json';
+
+	event.initMouseEvent("click", true, true, window,
+                             0, 0, 0, 0, 0, false, false,
+                             false, false, 0, null);
+
+	if (! a.dispatchEvent(event)) {
+            /* If the event processing failed, fallback */
+            a.click();
+	}
+    };
+
+
+    this.loadStateFromFile = function() {
+	// Load the state from a file on the web server 'pitfall-state.json'
+	var request = new XMLHttpRequest();
+
+	request.onreadystatechange = function() {
+	    if (request.readyState != 4) {
+		return;
+	    }
+	    else if (request.status == 200) {
+		self.log(3, "loadStateFromFile(): Loaded state from file");
+		localStorage.setItem('pitfallAgentCommands', request.responseText);
+		self.loadStateFromLocalStorage();
+	    }
+	    else {
+		self.log(0, "loadStateFromFile(): Request failed with status %o", request.status);
+	    }
+	};
+
+	request.open('GET', 'pitfall-state.json', true);
+
+	request.send();
+    }
+
+
     /********************************************************************************
      * Agent Interfaces
      ********************************************************************************/
@@ -522,9 +568,22 @@ function PitfallAgent(atariConsole) {
     };
 
 
+    this.createButton = function(title, onClick) {
+	var input = document.createElement('input');
+
+	input.type = 'button';
+	input.value = title;
+	input.onclick = onClick;
+	// TODO: Remove this next line:
+	input.style.marginRight = '5px';
+
+	return (input);
+    };
+
+
     this.initUI = function() {
 	var controlsDiv = document.createElement('div');
-	var clearStorageButton = document.createElement('input');
+
 
 	controlsDiv.style.textAlign = 'center';
 
@@ -537,17 +596,22 @@ function PitfallAgent(atariConsole) {
 	    self.setQuickTrainMode(event.target.checked);
 	}));
 
-	// Add a button for clearing the storage
+	// Add the button controls
 	controlsDiv.appendChild(document.createElement('br'));
-	clearStorageButton.type = 'button';
-	clearStorageButton.value = 'Reset Training';
-	clearStorageButton.onclick = function() {
+	controlsDiv.appendChild(this.createButton('Reset Training', function() {
 	    self.commands.splice(1);
 	    self.reset();
 	    self.numResets = 0;
 	    self.clearLocalStorage();
-	};
-	controlsDiv.appendChild(clearStorageButton);
+	}));
+
+	controlsDiv.appendChild(this.createButton('Download State File', function() {
+	    self.saveStateToFile();
+	}));
+
+	controlsDiv.appendChild(this.createButton('Load pitfall-state.json', function() {
+	    self.loadStateFromFile();
+	}));
 
 	Javatari.screenElement.parentNode.appendChild(controlsDiv);
     };
