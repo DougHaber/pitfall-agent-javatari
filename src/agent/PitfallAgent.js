@@ -375,7 +375,6 @@ function PitfallAgent(atariConsole) {
 	this.cpu.setPCWatchCallback(0xF66D, function() {
 	    self.nextCommandCycle = Math.round(self.commands[self.commands.length - 1].cycle + 1 + Math.random() * 500);
 	    self.currentScreenId = self.getScreenId();
-	    self.lastRunMaxWorldPosition = 1;
 
 	    if (! (quickTrain && self.savedAgentState)) { // Starting from the beginning
 		self.lastScore = 2000;
