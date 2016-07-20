@@ -2,7 +2,8 @@
 
 This repository is a fork of the [Javatari.js](http://javatari.org/) Atari 2600 emulator that has been modified to automatically play the game Pitfall.  An agent controls the player and through trial and error discovers a path through the game.
 
-In its current state this is a proof of concept, no doubt with several bugs and some large improvements just steps away.  The agent logic relies on taking random actions and saving what works.  Given enough time to train it is likely that this could progress far into the Pitfall world.
+In its current state this is a proof of concept, no doubt with several bugs and some large improvements just steps away.  The agent logic relies on taking random actions and saving what works.  Given enough time to train it is likely that this could progress far into the Pitfall world.  This is a new release as of January 19th, 2016, and hasn't had much chance to train.  So far it has managed to solve 10 screens.  As it progresses, the status and state files will be updated here.
+
 
 ![ScreenShot](pitfall-demo.gif)
 
@@ -17,7 +18,9 @@ Once the game is running there isn't much to do other than watch and check back 
 
 A small user interface is added after inserting a cartidge.  This provides checkboxes for determining whether to run at a faster speed and use checkpointing.  Both of these options help the training go faster.  Running at faster speed makes the game go quicker than its normal rate.  This may distort the audio.   Checkpointing is used to save the state from the beginning of the screen, so that each training cycle doesn't have to start all the way back at the beginning.
 
-The UI also provides 3 buttons.  The "Reset Training" button will remove all training data in use and stored by the browser.  The "Download State File" takes the currently checkpointed training state (up to the current screen) and downloads it.   The "Load pitfall-state.json" will load that file from the web server and use its state.  Loading a file requires that that the game be running on an actual webserver, rather than via `file://` URLs.
+The UI also provides 3 buttons.  The "Reset Training" button will remove all training data in use and stored by the browser.  The "Download State File" takes the currently checkpointed training state (up to the current screen) and downloads it.
+
+The "Load pitfall-state.json" will load that file from the web server and use its state.  Loading a file requires that that the game be running on an actual webserver, rather than via `file://` URLs.  The repository includes a sample JSON for in this place.  I am including an inital one that doesn't get very far, but will replace it eventually with a much better trained version.
 
 
 ## Logging
