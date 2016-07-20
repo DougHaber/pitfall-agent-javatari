@@ -412,6 +412,7 @@ function PitfallAgent(atariConsole) {
 
 	    this.commands = data.commands;
 	    this.numResets = data.numResets;
+            this.savedAgentState = undefined;
 
 	    this.reset();
 
