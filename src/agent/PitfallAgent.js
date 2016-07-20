@@ -320,7 +320,7 @@ function PitfallAgent(atariConsole) {
 	    this.numResetsWithoutProgress = 0;
 	}
 
-	if (this.numResetsWithoutProgress >= 20) {
+	if (this.numResetsWithoutProgress >= 5) {
 	    while (commands[commands.length - 1].worldPosition >= currentWorldPosition - 1 &&
 		   ! commands[commands.length - 1].checkPoint) {
 		this.pruneCommandGroup(commands[commands.length - 1].commandGroup);
@@ -351,7 +351,7 @@ function PitfallAgent(atariConsole) {
             this.cpu.reset();
 	}
 
-	this.log(1, "* RESET numResets=%o, retriesRemaining=%o", this.numResets, 20 - this.numResetsWithoutProgress);
+	this.log(1, "* RESET numResets=%o, retriesRemaining=%o", this.numResets, 5 - this.numResetsWithoutProgress);
 
 	// After a VSYNC, start the game
 	this.cpu.setPCWatchCallback(0xF66D, function() {
