@@ -151,9 +151,9 @@ function PitfallAgent(atariConsole) {
 	    if (this.quickTrainMode) {
 		// If we don't have a saved store or if we do, but this one is further along
 		if (! this.savedAgentState || this.screenNumber * 10 > this.savedAgentState.commandObject.worldPosition) {
-		    command = this.getCheckPointForScreen(this.screenNumber);
-
-		    if (! command) { // If there is no checkpointed command
+		    // If our last command was for this checkpoint or there is no checkpoint command
+		    if (commands[commands.length - 1].worldPosition == this.screenNumber * 10 ||
+			! this.getCheckPointForScreen(this.screenNumber)) {
 			tmp = commands.splice(this.currentCommandIndex);
 			command = this.scheduleCommand(this.cpuCycle, 'noop', undefined, 0);
 			command.worldPosition = this.screenNumber * 10;
