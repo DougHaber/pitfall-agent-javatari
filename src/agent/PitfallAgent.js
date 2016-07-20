@@ -303,8 +303,8 @@ function PitfallAgent(atariConsole) {
 	// Remove the current commands group and beyond
 	// This cleans any dangling parts (such as jump/jumpRelease) and unexecuted commands
 	if (this.currentCommandIndex && commands[this.currentCommandIndex]) {
+	    commands.splice(this.currentCommandIndex + 1);
 	    this.pruneCommandGroup(commands[this.currentCommandIndex].commandGroup);
-	    commands.splice(this.currentCommandIndex);
 	}
 
 	currentWorldPosition = commands[commands.length - 1].worldPosition;
