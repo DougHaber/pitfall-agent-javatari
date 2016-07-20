@@ -112,6 +112,21 @@ function PitfallAgent(atariConsole) {
     };
 
 
+    this.getMostRecentCheckPoint = function(screenNumber) {
+	// Return the most recent checkpoint command in the history
+	var commands = this.commands;
+	var x;
+
+	for (x = commands.length - 1; x > 1; x--) {
+	    if (commands[x].checkPoint) {
+		return commands[x];
+	    }
+	}
+
+	return undefined;
+    };
+
+
     this.getCheckPointForScreen = function(screenNumber) {
 	// Return the checkpoint command associated with a screenNumber
 	var commands = this.commands;
@@ -136,6 +151,7 @@ function PitfallAgent(atariConsole) {
 	// This is used for checking game state
 	var commands = this.commands;
 	var command;
+	var screenCheckPoint;
 	var tmp;
 
 	this.cpuCycle = cpuCycle + this.baseCPUTimeAdjust;
@@ -146,14 +162,16 @@ function PitfallAgent(atariConsole) {
 
 	if (this.getScreenId() != this.currentScreenId) {
 	    this.screenNumber++;
-	    self.currentScreenId = self.getScreenId();
+	    this.currentScreenId = this.getScreenId();
+	    this.log(1, "* Entering screen %o  (id=%o)", this.screenNumber, this.currentScreenId);
 
 	    if (this.quickTrainMode) {
 		// If we don't have a saved store or if we do, but this one is further along
 		if (! this.savedAgentState || this.screenNumber * 10 > this.savedAgentState.commandObject.worldPosition) {
 		    // If our last command was for this checkpoint or there is no checkpoint command
-		    if (commands[commands.length - 1].worldPosition == this.screenNumber * 10 ||
-			! this.getCheckPointForScreen(this.screenNumber)) {
+		    screenCheckPoint = this.getCheckPointForScreen(this.screenNumber);
+
+		    if (! screenCheckPoint || screenCheckPoint == this.getMostRecentCheckPoint()) {
 			tmp = commands.splice(this.currentCommandIndex);
 			command = this.scheduleCommand(this.cpuCycle, 'noop', undefined, 0);
 			command.worldPosition = this.screenNumber * 10;
@@ -357,6 +375,7 @@ function PitfallAgent(atariConsole) {
 	this.cpu.setPCWatchCallback(0xF66D, function() {
 	    self.nextCommandCycle = Math.round(self.commands[self.commands.length - 1].cycle + 1 + Math.random() * 500);
 	    self.currentScreenId = self.getScreenId();
+	    self.lastRunMaxWorldPosition = 1;
 
 	    if (! (quickTrain && self.savedAgentState)) { // Starting from the beginning
 		self.lastScore = 2000;
