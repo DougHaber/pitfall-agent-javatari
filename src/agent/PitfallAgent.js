@@ -112,10 +112,10 @@ function PitfallAgent(atariConsole) {
     };
 
 
-    this.getCheckPointForScreen = function(screenId) {
-	// Return the checkpoint command associated with a screenId
+    this.getCheckPointForScreen = function(screenNumber) {
+	// Return the checkpoint command associated with a screenNumber
 	var commands = this.commands;
-	var worldPosition = screenId * 10 + 1;
+	var worldPosition = screenNumber * 10;
 	var x;
 
 	for (x = commands.length - 1; x > 1; x--) {
@@ -153,14 +153,13 @@ function PitfallAgent(atariConsole) {
 		if (! this.savedAgentState || this.screenNumber * 10 > this.savedAgentState.commandObject.worldPosition) {
 		    command = this.getCheckPointForScreen(this.screenNumber);
 
-		    if (! command) {
+		    if (! command) { // If there is no checkpointed command
 			tmp = commands.splice(this.currentCommandIndex);
 			command = this.scheduleCommand(this.cpuCycle, 'noop', undefined, 0);
 			command.worldPosition = this.screenNumber * 10;
 			this.commands = commands.concat(tmp);
+			this.saveState(command);
 		    }
-
-		    this.saveState(command);
 		}
 	    }
 	}
@@ -222,7 +221,7 @@ function PitfallAgent(atariConsole) {
 
 
     this.isPlayerAboveGround = function() {
-	// Player y position is stored in e9.  32 is ground screenNumber.
+	// Player y position is stored in e9.  On the ground, the player is at 32..
 	// Check if the player is below ground height, and if not fail.
 	return (this.ram.read(0xe9) <= 32);
     };
@@ -334,12 +333,15 @@ function PitfallAgent(atariConsole) {
     };
 
 
-    this.reset = function() {
+    this.reset = function(doNotPruneHistory) {
         // Reset the CPU and wait 100ms for the game to load
 	var quickTrain = this.quickTrainMode;
 
 	this.inGame = false;
-        this.pruneCommands();
+
+	if (! doNotPruneHistory) {
+	    this.pruneCommands();
+	}
 
 	this.numResets++;
 
@@ -361,9 +363,7 @@ function PitfallAgent(atariConsole) {
 		self.currentCommandIndex = 0;
 		self.screenNumber = 0;
 		self.baseCPUTimeAdjust = 0;
-		self.resetNum = this.numResets;
 	    }
-
 
 	    self.cpu.setPCWatchCallback(0xF66D, self.VSYNCCallbackFunction);
 	    self.inGame = true;
@@ -414,7 +414,7 @@ function PitfallAgent(atariConsole) {
 	    this.numResets = data.numResets;
             this.savedAgentState = undefined;
 
-	    this.reset();
+	    this.reset(true);
 
 	    return true;
 	}
@@ -427,8 +427,15 @@ function PitfallAgent(atariConsole) {
 
     this.saveState = function(command) {
 	// Save the state
-	//  The past in command object is marked as the one used to save the state, but
+	//  The passed in command object is marked as the one used to save the state, but
 	//  the actual state of the agent and emulator determines the settings.
+
+	// This function is called when we arrive at a new screen.  We need all the state up
+	// until this point, but none of the state after it, so we remove all other commands.
+	// This may leave dangling commmands (such as a jumpRelease,) but it will clear
+	// itself out.
+	this.commands.splice(this.currentCommandIndex + 1);
+
 	this.savedAgentState = {
 	    lastScore: this.lastScore,
 	    currentCommandIndex: this.currentCommandIndex,
@@ -452,7 +459,7 @@ function PitfallAgent(atariConsole) {
 	var savedAgentState = this.savedAgentState;
 
 	if (! savedAgentState) {
-	    this.log(3, "NO STATE TO LOAD");
+	    this.log(3, "No checkpointed state found.  Starting from the beginning.");
 	    return false;
 	}
 
@@ -600,7 +607,8 @@ function PitfallAgent(atariConsole) {
 	controlsDiv.appendChild(document.createElement('br'));
 	controlsDiv.appendChild(this.createButton('Reset Training', function() {
 	    self.commands.splice(1);
-	    self.reset();
+	    self.commands[0].execCounter = 0;
+	    self.reset(true);
 	    self.numResets = 0;
 	    self.clearLocalStorage();
 	}));
@@ -695,7 +703,7 @@ function PitfallAgent(atariConsole) {
 	// Either load the last trained state from localStorage, or start by going right
 	if (! this.loadStateFromLocalStorage()) {
 	    this.scheduleCommand(500000, 'right');
-	    this.reset();
+	    this.reset(true);
 	}
     };
 
