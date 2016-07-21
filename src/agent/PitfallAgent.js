@@ -369,7 +369,8 @@ function PitfallAgent(atariConsole) {
             this.cpu.reset();
 	}
 
-	this.log(1, "* RESET numResets=%o, retriesRemaining=%o", this.numResets, 5 - this.numResetsWithoutProgress);
+	this.log(1, "* RESET numResets=%o, retriesRemaining=%o, screen=%o",
+		 this.numResets, 5 - this.numResetsWithoutProgress, this.screenNumber);
 
 	// After a VSYNC, start the game
 	this.cpu.setPCWatchCallback(0xF66D, function() {
@@ -386,7 +387,7 @@ function PitfallAgent(atariConsole) {
 	    self.cpu.setPCWatchCallback(0xF66D, self.VSYNCCallbackFunction);
 	    self.inGame = true;
 	});
-    }
+    };
 
 
     /********************************************************************************
@@ -408,7 +409,7 @@ function PitfallAgent(atariConsole) {
 	    savedAgentState: this.savedAgentState, // For debugging
 	    numResets: this.numResets
 	}));
-    }
+    };
 
 
     this.loadStateFromLocalStorage = function() {
@@ -440,7 +441,7 @@ function PitfallAgent(atariConsole) {
 	    this.log(0, "ERROR: Failed to parse JSON from LocalStorage: No LocalStorage State");
 	    return false;
 	}
-    }
+    };
 
 
     this.saveState = function(command) {
@@ -546,7 +547,7 @@ function PitfallAgent(atariConsole) {
 	request.open('GET', 'pitfall-state.json', true);
 
 	request.send();
-    }
+    };
 
 
     /********************************************************************************
@@ -560,7 +561,7 @@ function PitfallAgent(atariConsole) {
 	else {
 	    this.atariConsole.mainClockAdjustToNormal();
 	}
-    }
+    };
 
 
     this.setQuickTrainMode = function(enabled) {
