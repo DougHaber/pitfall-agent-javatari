@@ -11,8 +11,9 @@ function PitfallAgent(atariConsole) {
     // This section defines the various settings used by the algorithm to determine
     // the limits and odds of random behaviors.
 
-    // The times are based off of clock tics.  The clock runs at 1.19Mhz, so the numbers
-    // are roughly 19% faster than milliseconds.
+    // The times are based off of thousands of clock ticks.   There are roughly a million
+    // ticks per second when running at normal speed.  It is generally close enough to think
+    // of the durations as being in something close to milliseconds.
 
     // Settings only have an effect when training.  When playing back recorded commands,
     // the states are used as recorded.
@@ -20,11 +21,15 @@ function PitfallAgent(atariConsole) {
     var settings = {
         // Allow command variations to be repeated this many times without progressing
         // to a further position.
-        numResetsWithoutProgress: 15,
+        numResetsWithoutProgress: 20,
 
         // How long to hold down a single press button or control before releasing.
         // Used for the jump and down buttons.
         buttonHoldDuration: 50,
+
+	// After a reset, we wait a random number between 0 and resetNextCommandDelay cycles
+	// before executing our next command.
+	resetNextCommandDelay: 800,
 
         // ** Behavior Times **
 
@@ -33,26 +38,26 @@ function PitfallAgent(atariConsole) {
         // The randomTypeDuration is the random number of extra cycles waited. (0 to n - 1)
         //
         // For example, if min is 100 and random is 1000, that means the wait will be
-        // between 100 and 1099 cycles.  (100 + Math.random() * 1000.)
+        // between 100 and 1099 thousand cycles.  (100 + Math.random() * 1000)
         // Used numbers are truncated.
-        minRightDuration: 50, // The delay after starting to move right
-        randomRightDuration: 400,
+        minRightDuration: 100, // The delay after starting to move right
+        randomRightDuration: 700,
         minStopDuration: 200, // Stop means hold the controller in the center (stop moving right)
         randomStopDuration: 1000,
         minDownDuration: 200, // Down is the amount of wait after releasing a vine
         randomDownDuration: 300,
-        minJumpDuration: 700, // The wait for a Jump.  (Do not set lower than the amount of time a jump takes.)
+        minJumpDuration: 554, // The wait for a Jump. (Jumps take about 554000 cycles.  This must be higher.)
         randomJumpDuration: 200,
         minNOOPDuration: 100,  // NOOP means extending the current state with no changes
-        randomNOOPDuration: 3000,
-        minReleaseVineDuration: 200, // This is the amount of wait when on a vine before releasing
-        randomReleaseVineDuration: 8000,
+        randomNOOPDuration: 2000,
+        minReleaseVineDuration: 600, // This is the amount of wait when on a vine before releasing
+        randomReleaseVineDuration: 5000,
 
         // ** Odds of Behaviors (as percentages) **
 
-        chanceOfNoChange: 0.2, // The chance of not altering the current controls
+        chanceOfNoChange: 0.15, // The chance of not altering the current controls
         // Otherwise, if we are on a vine we automatically schedule our releaseVineDuration
-        chanceOfRight: 0.6, // Otherwise, if stopped, the chance of starting to move right
+        chanceOfRight: 0.7, // Otherwise, if stopped, the chance of starting to move right
         chanceOfStop: 0.15 // Otherwise, if going right, the chance of stopping
         // Otherwise, we jump.  When stationary, the jump is straight up, otherwise it is to the right.
     };
@@ -437,7 +442,8 @@ function PitfallAgent(atariConsole) {
 
         // After a VSYNC, start the game
         this.cpu.setPCWatchCallback(0xF66D, function() {
-            self.nextCommandCycle = Math.round(self.commands[self.commands.length - 1].cycle + 1 + Math.random() * 500);
+            self.nextCommandCycle = parseInt(self.commands[self.commands.length - 1].cycle +
+					      1 + (Math.random() * settings.resetNextCommandDelay) * 1000);
             self.currentScreenId = self.getScreenId();
 
             if (! (quickTrain && self.savedAgentState)) { // Starting from the beginning
