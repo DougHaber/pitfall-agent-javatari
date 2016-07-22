@@ -5,6 +5,60 @@ function PitfallAgent(atariConsole) {
 
 
     /********************************************************************************
+     * Settings
+     ********************************************************************************/
+
+    // This section defines the various settings used by the algorithm to determine
+    // the limits and odds of random behaviors.
+
+    // The times are based off of clock tics.  The clock runs at 1.19Mhz, so the numbers
+    // are roughly 19% faster than milliseconds.
+
+    // Settings only have an effect when training.  When playing back recorded commands,
+    // the states are used as recorded.
+
+    var settings = {
+	// Allow command variations to be repeated this many times without progressing
+	// to a further position.
+	numResetsWithoutProgress: 15,
+
+	// How long to hold down a single press button or control before releasing.
+	// Used for the jump and down buttons.
+	buttonHoldDuration: 50,
+
+	// ** Behavior Times **
+
+	// When choosing a new behavior, these time values define the limits
+	// For behavior 'Type' the minTypeDuration is the minimum wait before another behavior.
+	// The randomTypeDuration is the random number of extra cycles waited. (0 to n - 1)
+	//
+	// For example, if min is 100 and random is 1000, that means the wait will be
+        // between 100 and 1099 cycles.  (100 + Math.random() * 1000.)
+	// Used numbers are truncated.
+        minRightDuration: 50, // The delay after starting to move right
+        randomRightDuration: 400,
+        minStopDuration: 200, // Stop means hold the controller in the center (stop moving right)
+        randomStopDuration: 1000,
+        minDownDuration: 200, // Down is the amount of wait after releasing a vine
+        randomDownDuration: 300,
+        minJumpDuration: 700, // The wait for a Jump.  (Do not set lower than the amount of time a jump takes.)
+        randomJumpDuration: 200,
+        minNOOPDuration: 100,  // NOOP means extending the current state with no changes
+        randomNOOPDuration: 3000,
+        minReleaseVineDuration: 200, // This is the amount of wait when on a vine before releasing
+        randomReleaseVineDuration: 8000,
+
+	// ** Odds of Behaviors (as percentages) **
+
+	chanceOfNoChange: 0.2, // The chance of not altering the current controls
+	// Otherwise, if we are on a vine we automatically schedule our releaseVineDuration
+	chanceOfRight: 0.6, // Otherwise, if stopped, the chance of starting to move right
+	chanceOfStop: 0.15 // Otherwise, if going right, the chance of stopping
+	// Otherwise, we jump.  When stationary, the jump is straight up, otherwise it is to the right.
+    };
+
+
+    /********************************************************************************
      * Agent Logic and Controls
      ********************************************************************************/
 
@@ -26,21 +80,26 @@ function PitfallAgent(atariConsole) {
 
 	// Add any extra actions needed by the command
 	if (commandName == 'right') {
-	    this.nextCommandCycle = nextCommandCycle || cpuCycle + (50 + Math.random() * 300) * 1000;
+	    this.nextCommandCycle = nextCommandCycle || cpuCycle +
+		(settings.minRightDuration + Math.random() * settings.randomRightDuration) * 1000;
 	}
-	else if (commandName == 'rightRelease') { // Stop and wait
-	    this.nextCommandCycle = nextCommandCycle || cpuCycle + (200 + Math.random() * 1000) * 1000;
+	else if (commandName == 'stop') {
+	    this.nextCommandCycle = nextCommandCycle || cpuCycle +
+		(settings.minStopDuration + Math.random() * settings.randomStopDuration) * 1000;
 	}
 	else if (commandName == 'down') { // Release vine
-	    this.scheduleCommand(cpuCycle + 50000, 'downRelease', commandGroup);
-	    this.nextCommandCycle = nextCommandCycle || cpuCycle + (200 + Math.random() * 300) * 1000;
+	    this.scheduleCommand(cpuCycle + settings.buttonHoldDuration * 1000, 'downRelease', commandGroup);
+	    this.nextCommandCycle = nextCommandCycle || cpuCycle +
+		(settings.minDownDuration + Math.random() * settings.randomDownDuration) * 1000;
 	}
 	else if (commandName == 'jump') {
-	    this.scheduleCommand(cpuCycle + 50000, 'jumpRelease', commandGroup);
-	    this.nextCommandCycle = nextCommandCycle || cpuCycle + (700 + Math.random() * 200) * 1000;
+	    this.scheduleCommand(cpuCycle + settings.buttonHoldDuration * 1000, 'jumpRelease', commandGroup);
+	    this.nextCommandCycle = nextCommandCycle || cpuCycle +
+		(settings.minJumpDuration + Math.random() * settings.randomJumpDuration) * 1000;
 	}
 	else if (commandName == 'noop') {
-	    this.nextCommandCycle = nextCommandCycle || cpuCycle + (200 + Math.random() * 3000) * 1000;
+	    this.nextCommandCycle = nextCommandCycle || cpuCycle +
+		(settings.minNOOPDuration + Math.random() * settings.randomNOOPDuration) * 1000;
 	}
 
 	return this.commands[this.commands.length - 1];
@@ -50,17 +109,21 @@ function PitfallAgent(atariConsole) {
     this.chooseNextCommand = function(cpuCycle) {
 	// Randomly pick the next command to run
 
-	if (Math.random() > 0.9) { // Stay unchanged for a little longer
+	if (Math.random() <= settings.chanceOfNoChange) { // Stay unchanged for a little longer
 	    this.scheduleCommand(cpuCycle, 'noop');
 	}
 	else if (this.isPlayerOnVine()) {
-	    this.scheduleCommand(cpuCycle + (200 + Math.random() * 10000) * 1000, 'down');
+	    this.scheduleCommand(cpuCycle +
+				 (settings.minReleaseVineDuration +
+				  Math.random() * settings.randomReleaseVineDuration) * 1000, 'down');
 	}
-	else if (! this.controlStates.right && Math.random() > 0.5) { // If we aren't going right, go right
+	else if (! this.controlStates.right && Math.random() <= settings.chanceOfRight) {
+	    // If we aren't going right, go right
 	    this.scheduleCommand(cpuCycle, 'right');
 	}
-	else if (this.controlStates.right && Math.random() > 0.9) { // Stop
-	    this.scheduleCommand(cpuCycle, 'rightRelease');
+	else if (this.controlStates.right && Math.random() <= settings.chanceOfStop) {
+	    // If we are going right, stop
+	    this.scheduleCommand(cpuCycle, 'stop');
 	}
 	else {
 	    this.scheduleCommand(cpuCycle, 'jump');
@@ -98,7 +161,7 @@ function PitfallAgent(atariConsole) {
 		    currentCommand.checkPoint ? 'CheckPoint' : '');
 
 	if (commandName == 'right')             { this.pressRight(true);   }
-	else if (commandName == 'rightRelease') { this.pressRight(false);  }
+	else if (commandName == 'stop')         { this.pressRight(false);  }
 	else if (commandName == 'jump')         { this.pressButton(true);  }
 	else if (commandName == 'jumpRelease')  { this.pressButton(false); }
 	else if (commandName == 'down')         { this.pressDown(true);    }
@@ -338,7 +401,7 @@ function PitfallAgent(atariConsole) {
 	    this.numResetsWithoutProgress = 0;
 	}
 
-	if (this.numResetsWithoutProgress >= 5) {
+	if (this.numResetsWithoutProgress >= settings.numResetsWithoutProgress) {
 	    while (commands[commands.length - 1].worldPosition >= currentWorldPosition - 1 &&
 		   ! commands[commands.length - 1].checkPoint) {
 		this.pruneCommandGroup(commands[commands.length - 1].commandGroup);
@@ -370,7 +433,7 @@ function PitfallAgent(atariConsole) {
 	}
 
 	this.log(1, "* RESET numResets=%o, retriesRemaining=%o, screen=%o",
-		 this.numResets, 5 - this.numResetsWithoutProgress, this.screenNumber);
+		 this.numResets, settings.numResetsWithoutProgress - this.numResetsWithoutProgress, this.screenNumber);
 
 	// After a VSYNC, start the game
 	this.cpu.setPCWatchCallback(0xF66D, function() {
