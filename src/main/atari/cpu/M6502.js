@@ -67,7 +67,7 @@ jt.M6502 = function() {
     // Interfaces
     var bus;
     var RDY = false;
-    var cycles = 0;
+    var numCycles = 0;
 
     // Registers
     var PC = 0;
