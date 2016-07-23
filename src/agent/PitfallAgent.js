@@ -482,9 +482,7 @@ function PitfallAgent(atariConsole) {
 
 
     this.loadStateFromLocalStorage = function() {
-        // Save the commands[] into localStorage
-        // This saves it raw.  If needed, we can reduce size by removing
-        // noops and debug vars.
+        // Load the state from localStorage
         var storedJSON = localStorage.getItem('pitfallAgentCommands')
         var data;
         var error;
@@ -515,8 +513,8 @@ function PitfallAgent(atariConsole) {
 
     this.saveState = function(command) {
         // Save the state
-        //  The passed in command object is marked as the one used to save the state, but
-        //  the actual state of the agent and emulator determines the settings.
+        // The passed in command object is marked as the one used to save the state, but
+        // the actual state of the agent and emulator determines the settings.
 
         // This function is called when we arrive at a new screen.  We need all the state up
         // until this point, but none of the state after it, so we remove all other commands.
@@ -568,8 +566,10 @@ function PitfallAgent(atariConsole) {
         this.pressDown(savedAgentState.downControl);
 
         this.cpu.reset();
+
         this.atariConsole.getSavestateSocket().loadState(0);
         this.log(3, "LOAD_STATE=%O  [new index=%o]  lvl=%o", savedAgentState, this.currentCommandIndex, this.screenNumber);
+
         return true;
     };
 
