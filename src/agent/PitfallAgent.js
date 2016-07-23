@@ -562,8 +562,6 @@ function PitfallAgent(atariConsole) {
         this.pressButton(savedAgentState.buttonControl);
         this.pressDown(savedAgentState.downControl);
 
-        this.cpu.reset();
-
         this.atariConsole.getSavestateSocket().loadState(0);
         this.log(3, "LOAD_STATE=%O  [new index=%o]  lvl=%o", savedAgentState, this.currentCommandIndex, this.screenNumber);
 
