@@ -29,9 +29,8 @@ jt.M6502 = function() {
         numCycles++;
 
 	if (PC_watch_callback && PC_watch_address == PC) {
-	    PC_watch_callback(numCycles);
-
-	    if (PC != PC_watch_address) { // If a reset occurred
+	    if (PC_watch_callback(numCycles)) {
+		// The callback returns true when the CPU was reset within it.
 		return;
 	    }
 	}

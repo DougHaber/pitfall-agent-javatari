@@ -217,6 +217,7 @@ function PitfallAgent(atariConsole) {
     this.onVSYNC = function(cpuCycle) {
         // Called every time a VSYNC occurs
         // This is used for checking game state
+	// Return true if we reset within the callback.
         var commands = this.commands;
         var command;
         var screenCheckPoint;
@@ -225,7 +226,7 @@ function PitfallAgent(atariConsole) {
         this.cpuCycle = cpuCycle;
 
         if (this.updateAndCheckState()) {
-            return;
+            return (true);
         }
 
         if (this.getScreenId() != this.currentScreenId) {
@@ -249,6 +250,8 @@ function PitfallAgent(atariConsole) {
                 }
             }
         }
+
+	return (false);
     };
 
 
@@ -434,7 +437,7 @@ function PitfallAgent(atariConsole) {
         this.clearAllControls(); // Stop pressing on the controls
 
         if (! (quickTrain && this.loadState())) {
-            this.cpu.reset();
+	    this.cpu.reset();
         }
 
         this.log(1, "* RESET numResets=%o, retriesRemaining=%o, screen=%o",
@@ -467,15 +470,38 @@ function PitfallAgent(atariConsole) {
     };
 
 
+    this.cleanCommandsForSave = function(commands) {
+	// Generate command list with strings for the field names to ensure
+	// consitent saves, even when advanced compilation options are enabled.
+	var newCommands = [];
+	var command;
+	var x;
+
+	for (x = 0; x < commands.length; x++) {
+	    command = commands[x];
+
+	    newCommands.push({
+		'cycle': command.cycle,
+		'commandName': command.commandName,
+		'worldPosition': command.worldPosition,
+		'execCounter': command.execCounter,
+		'checkPoint': command.checkPoint,
+		'commandGroup': command.commandGroup
+	    });
+	}
+
+	return newCommands;
+    };
+
+
     this.saveStateToLocalStorage = function() {
         // Save the commands[] into localStorage
         // This saves it raw.  If needed, we can reduce size by removing
         // unimpactful commands and debug vars.  We also probably shouldn't save non-executed
         // commands.
         localStorage.setItem('pitfallAgentCommands', JSON.stringify({
-            commands: this.commands,
-            savedAgentState: this.savedAgentState, // For debugging
-            numResets: this.numResets
+            'commands': this.cleanCommandsForSave(this.commands),
+            'numResets': this.numResets
         }));
     };
 
@@ -483,20 +509,20 @@ function PitfallAgent(atariConsole) {
     this.loadStateFromLocalStorage = function() {
         // Load the state from localStorage
         var storedJSON = localStorage.getItem('pitfallAgentCommands')
-        var data;
+        var state;
         var error;
 
         if (storedJSON) {
             try {
-                data = JSON.parse(storedJSON);
+                state = JSON.parse(storedJSON);
             }
             catch (error) {
                 this.log(0, "ERROR: Failed to parse JSON from LocalStorage: %o", error);
                 return false;
             }
 
-            this.commands = data.commands;
-            this.numResets = data.numResets;
+            this.commands = state['commands'];
+            this.numResets = state['numResets'];
             this.savedAgentState = undefined;
 
             this.reset(true);
@@ -774,7 +800,9 @@ function PitfallAgent(atariConsole) {
 
         // Every time there is a VSYNC, call this to update the state
         this.VSYNCCallbackFunction = function(cpuCycle) {
-            self.inGame && self.onVSYNC(cpuCycle);
+            if (self.inGame) {
+		return self.onVSYNC(cpuCycle);
+	    }
         };
 
         this.initUI();
