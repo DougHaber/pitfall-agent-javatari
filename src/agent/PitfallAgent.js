@@ -222,7 +222,7 @@ function PitfallAgent(atariConsole) {
         var screenCheckPoint;
         var tmp;
 
-        this.cpuCycle = cpuCycle + this.baseCPUTimeAdjust;
+        this.cpuCycle = cpuCycle;
 
         if (this.updateAndCheckState()) {
             return;
@@ -257,7 +257,7 @@ function PitfallAgent(atariConsole) {
         // This is used for injecting input
         var currentCommand = this.commands[this.currentCommandIndex];
 
-        this.cpuCycle = cpuCycle + this.baseCPUTimeAdjust;
+        this.cpuCycle = cpuCycle;
 
         if (currentCommand) {
             if (currentCommand.cycle <= this.cpuCycle) { // Send the next prepared command
@@ -450,7 +450,6 @@ function PitfallAgent(atariConsole) {
                 self.lastScore = 2000;
                 self.currentCommandIndex = 0;
                 self.screenNumber = 0;
-                self.baseCPUTimeAdjust = 0;
             }
 
             self.cpu.setPCWatchCallback(0xF66D, self.VSYNCCallbackFunction);
@@ -558,8 +557,6 @@ function PitfallAgent(atariConsole) {
         this.lastScore = savedAgentState.lastScore;
         this.currentCommandIndex = savedAgentState.currentCommandIndex;
         this.screenNumber = savedAgentState.screenNumber;
-
-        this.baseCPUTimeAdjust = savedAgentState.cpuCycle;
 
         this.pressRight(savedAgentState.rightControl);
         this.pressButton(savedAgentState.buttonControl);
@@ -745,7 +742,6 @@ function PitfallAgent(atariConsole) {
 
         this.lastRunMaxWorldPosition = 1; // The maxWorldPosition at the end of the last run
         this.cpuCycle = undefined;
-        this.baseCPUTimeAdjust = 0; // When using saved states, set the starting clock
         this.lastScore = 2000;
 
         // Commands is an array of hashes containing commands and the state at time of execution
