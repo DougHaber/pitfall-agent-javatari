@@ -224,30 +224,30 @@ jt.Cartridge10K_DPCa = function(rom, format) {
 
     this.saveState = function() {
         return {
-            f: this.format.name,
-            r: this.rom.saveState(),
-            b: btoa(jt.Util.uInt8ArrayToByteString(bytes)),
-            bo: bankAddressOffset,
-            rn: randomNumber,
-            fp: btoa(jt.Util.uInt8ArrayToByteString(fetcherPointer)),
-            fs: btoa(jt.Util.uInt8ArrayToByteString(fetcherStart)),
-            fe: btoa(jt.Util.uInt8ArrayToByteString(fetcherEnd)),
-            fm: btoa(jt.Util.uInt8ArrayToByteString(fetcherMask)),
-            a: btoa(jt.Util.uInt8ArrayToByteString(audioMode))
+            'f': this.format.name,
+            'r': this.rom.saveState(),
+            'b': btoa(jt.Util.uInt8ArrayToByteString(bytes)),
+            'bo': bankAddressOffset,
+            'rn': randomNumber,
+            'fp': btoa(jt.Util.uInt8ArrayToByteString(fetcherPointer)),
+            'fs': btoa(jt.Util.uInt8ArrayToByteString(fetcherStart)),
+            'fe': btoa(jt.Util.uInt8ArrayToByteString(fetcherEnd)),
+            'fm': btoa(jt.Util.uInt8ArrayToByteString(fetcherMask)),
+            'a': btoa(jt.Util.uInt8ArrayToByteString(audioMode))
         };
     };
 
     this.loadState = function(state) {
-        this.format = jt.CartridgeFormats[state.f];
-        this.rom = jt.ROM.loadState(state.r);
-        bytes = jt.Util.byteStringToUInt8Array(atob(state.b));
-        bankAddressOffset = state.bo;
-        randomNumber = state.rn;
-        fetcherPointer = jt.Util.byteStringToUInt8Array(atob(state.fp));
-        fetcherStart = jt.Util.byteStringToUInt8Array(atob(state.fs));
-        fetcherEnd = jt.Util.byteStringToUInt8Array(atob(state.fe));
-        fetcherMask = jt.Util.byteStringToUInt8Array(atob(state.fm));
-        audioMode = jt.Util.byteStringToUInt8Array(atob(state.a));
+        this.format = jt.CartridgeFormats[state['f']];
+        this.rom = jt.ROM.loadState(state['r']);
+        bytes = jt.Util.byteStringToUInt8Array(atob(state['b']));
+        bankAddressOffset = state['bo'];
+        randomNumber = state['rn'];
+        fetcherPointer = jt.Util.byteStringToUInt8Array(atob(state['fp']));
+        fetcherStart = jt.Util.byteStringToUInt8Array(atob(state['fs']));
+        fetcherEnd = jt.Util.byteStringToUInt8Array(atob(state['fe']));
+        fetcherMask = jt.Util.byteStringToUInt8Array(atob(state['fm']));
+        audioMode = jt.Util.byteStringToUInt8Array(atob(state['a']));
     };
 
 

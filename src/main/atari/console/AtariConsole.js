@@ -137,23 +137,23 @@ jt.AtariConsole = function() {
 
     var saveState = function() {
         return {
-            t: tia.saveState(),
-            p: pia.saveState(),
-            r: ram.saveState(),
-            c: cpu.saveState(),
-            ca: getCartridge() && getCartridge().saveState(),
-            vs: videoStandard.name
+            't': tia.saveState(),
+            'p': pia.saveState(),
+            'r': ram.saveState(),
+            'c': cpu.saveState(),
+            'ca': getCartridge() && getCartridge().saveState(),
+            'vs': videoStandard.name
         };
     };
 
     var loadState = function(state) {
         if (!self.powerIsOn) self.powerOn();
-        tia.loadState(state.t);
-        pia.loadState(state.p);
-        ram.loadState(state.r);
-        cpu.loadState(state.c);
-        setCartridge(state.ca && jt.CartridgeDatabase.createCartridgeFromSaveState(state.ca));
-        setVideoStandard(jt.VideoStandard[state.vs]);
+        tia.loadState(state['t']);
+        pia.loadState(state['p']);
+        ram.loadState(state['r']);
+        cpu.loadState(state['c']);
+        setCartridge(state['ca'] && jt.CartridgeDatabase.createCartridgeFromSaveState(state['ca']));
+        setVideoStandard(jt.VideoStandard[state['vs']]);
         controlsSocket.controlsStatesRedefined();
     };
 
@@ -423,7 +423,7 @@ jt.AtariConsole = function() {
         this.saveState = function(slot) {
             if (!self.powerIsOn || !media) return;
             var state = saveState();
-            state.v = VERSION;
+            state['v'] = VERSION;
             if (media.saveState(slot, state))
                 self.showOSD("State " + slot + " saved", true);
             else
@@ -437,7 +437,7 @@ jt.AtariConsole = function() {
                 self.showOSD("State " + slot + " not found", true);
                 return;
             }
-            if (state.v !== VERSION) {
+            if (state['v'] !== VERSION) {
                 self.showOSD("State " + slot + " load failed, wrong version", true);
                 return;
             }
@@ -450,7 +450,7 @@ jt.AtariConsole = function() {
             // Use Cartrige label as file name
             var fileName = cartridgeSocket.inserted() && cartridgeSocket.inserted().rom.info.l;
             var state = saveState();
-            state.v = VERSION;
+            state['v'] = VERSION;
             if (media.saveStateFile(fileName, state))
                 self.showOSD("State Cartridge saved", true);
             else
@@ -461,7 +461,7 @@ jt.AtariConsole = function() {
             if (!media) return;
             var state = media.loadStateFile(data);
             if (!state) return;
-            if (state.v !== VERSION) {
+            if (state['v'] !== VERSION) {
                 self.showOSD("State Cartridge load failed, wrong version", true);
                 return true;
             }

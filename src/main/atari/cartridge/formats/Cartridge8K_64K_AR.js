@@ -245,16 +245,16 @@ jt.Cartridge8K_64K_AR = function(rom, format) {
 
     this.saveState = function() {
         return {
-            f: this.format.name,
-            r: this.rom.saveState(),
-            b: btoa(jt.Util.uInt8ArrayToByteString(bytes))
+            'f': this.format.name,
+            'r': this.rom.saveState(),
+            'b': btoa(jt.Util.uInt8ArrayToByteString(bytes))
         };
     };
 
     this.loadState = function(state) {
-        this.format = jt.CartridgeFormats[state.f];
-        this.rom = jt.ROM.loadState(state.r);
-        bytes = jt.Util.byteStringToUInt8Array(atob(state.b));
+        this.format = jt.CartridgeFormats[state['f']];
+        this.rom = jt.ROM.loadState(state['r']);
+        bytes = jt.Util.byteStringToUInt8Array(atob(state['b']));
     };
 
 

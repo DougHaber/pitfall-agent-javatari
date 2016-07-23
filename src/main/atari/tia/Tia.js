@@ -972,190 +972,190 @@ jt.Tia = function(pCpu, pPia) {
 
     this.saveState = function() {
         return {
-            lp:     btoa(jt.Util.uInt32ArrayToByteString(linePixels)),
-            lo:     lastObservableChangeClock,
-            oc:     observableChangeExtended | 0,
-            rl:     repeatLastLine | 0,
-            vs:     vSyncOn | 0,
-            vb:     vBlankOn | 0,
-            vbd:    vBlankDecodeActive | 0,
-            vbn:    vBlankNewState | 0,
-            f:      jt.Util.booleanArrayToByteString(playfieldPattern),
-            fi:     playfieldPatternInvalid | 0,
-            fp:     playfieldCurrentPixel | 0,
-            fc:     playfieldColor,
-            fb:     playfieldBackground,
-            fr:     playfieldReflected | 0,
-            fs:     playfieldScoreMode | 0,
-            ft:     playfieldPriority | 0,
-            p0:     player0ActiveSprite,
-            p0d:    player0DelayedSprite,
-            p0c:    player0Color,
-            p0rr:   player0RecentReset | 0,
-            p0co:   player0Counter,
-            p0sc:   player0ScanCounter,
-            p0ss:   player0ScanSpeed,
-            p0v:    player0VerticalDelay | 0,
-            p0cc:   player0CloseCopy | 0,
-            p0mc:   player0MediumCopy | 0,
-            p0wc:   player0WideCopy | 0,
-            p0r:    player0Reflected | 0,
-            p1:     player1ActiveSprite,
-            p1d:    player1DelayedSprite,
-            p1c:    player1Color,
-            p1rr:   player1RecentReset | 0,
-            p1co:   player1Counter,
-            p1sc:   player1ScanCounter,
-            p1ss:   player1ScanSpeed,
-            p1v:    player1VerticalDelay | 0,
-            p1cc:   player1CloseCopy | 0,
-            p1mc:   player1MediumCopy | 0,
-            p1wc:   player1WideCopy | 0,
-            p1r:    player1Reflected | 0,
-            m0:     missile0Enabled | 0,
-            m0c:    missile0Color,
-            m0rr:   missile0RecentReset | 0,
-            m0co:   missile0Counter,
-            m0sc:   missile0ScanCounter,
-            m0ss:   missile0ScanSpeed,
-            m0r:    missile0ResetToPlayer | 0,
-            m1:     missile1Enabled | 0,
-            m1c:    missile1Color,
-            m1rr:   missile1RecentReset | 0,
-            m1co:   missile1Counter,
-            m1sc:   missile1ScanCounter,
-            m1ss:   missile1ScanSpeed,
-            m1r:    missile1ResetToPlayer | 0,
-            b:      ballEnabled | 0,
-            bd:     ballDelayedEnablement | 0,
-            bc:     ballColor,
-            bco:    ballCounter,
-            bsc:    ballScanCounter,
-            bss:    ballScanSpeed,
-            bv:     ballVerticalDelay | 0,
-            fd:     playfieldDelayedChangeClock,
-            fdc:    playfieldDelayedChangePart,
-            fdp:    playfieldDelayedChangePattern,
-            pds:    btoa(jt.Util.uInt8BiArrayToByteString(playersDelayedSpriteChanges)),
-            pdc:    playersDelayedSpriteChangesCount,
-            hb:     hMoveHitBlank | 0,
-            hc:     hMoveHitClock,
-            PF0:    PF0,
-            PF1:    PF1,
-            PF2:    PF2,
-            AC0:    AUDC0,
-            AC1:    AUDC1,
-            AF0:    AUDF0,
-            AF1:    AUDF1,
-            AV0:    AUDV0,
-            AV1:    AUDV1,
-            HP0:    HMP0,
-            HP1:    HMP1,
-            HM0:    HMM0,
-            HM1:    HMM1,
-            HB:     HMBL,
-            XM0P:   CXM0P,
-            XM1P:   CXM1P,
-            XP0F:   CXP0FB,
-            XP1F:   CXP1FB,
-            XM0F:   CXM0FB,
-            XM1F:   CXM1FB,
-            XBP:    CXBLPF,
-            XPM:    CXPPMM
+            'lp':     btoa(jt.Util.uInt32ArrayToByteString(linePixels)),
+            'lo':     lastObservableChangeClock,
+            'oc':     observableChangeExtended | 0,
+            'rl':     repeatLastLine | 0,
+            'vs':     vSyncOn | 0,
+            'vb':     vBlankOn | 0,
+            'vbd':    vBlankDecodeActive | 0,
+            'vbn':    vBlankNewState | 0,
+            'f':      jt.Util.booleanArrayToByteString(playfieldPattern),
+            'fi':     playfieldPatternInvalid | 0,
+            'fp':     playfieldCurrentPixel | 0,
+            'fc':     playfieldColor,
+            'fb':     playfieldBackground,
+            'fr':     playfieldReflected | 0,
+            'fs':     playfieldScoreMode | 0,
+            'ft':     playfieldPriority | 0,
+            'p0':     player0ActiveSprite,
+            'p0d':    player0DelayedSprite,
+            'p0c':    player0Color,
+            'p0rr':   player0RecentReset | 0,
+            'p0co':   player0Counter,
+            'p0sc':   player0ScanCounter,
+            'p0ss':   player0ScanSpeed,
+            'p0v':    player0VerticalDelay | 0,
+            'p0cc':   player0CloseCopy | 0,
+            'p0mc':   player0MediumCopy | 0,
+            'p0wc':   player0WideCopy | 0,
+            'p0r':    player0Reflected | 0,
+            'p1':     player1ActiveSprite,
+            'p1d':    player1DelayedSprite,
+            'p1c':    player1Color,
+            'p1rr':   player1RecentReset | 0,
+            'p1co':   player1Counter,
+            'p1sc':   player1ScanCounter,
+            'p1ss':   player1ScanSpeed,
+            'p1v':    player1VerticalDelay | 0,
+            'p1cc':   player1CloseCopy | 0,
+            'p1mc':   player1MediumCopy | 0,
+            'p1wc':   player1WideCopy | 0,
+            'p1r':    player1Reflected | 0,
+            'm0':     missile0Enabled | 0,
+            'm0c':    missile0Color,
+            'm0rr':   missile0RecentReset | 0,
+            'm0co':   missile0Counter,
+            'm0sc':   missile0ScanCounter,
+            'm0ss':   missile0ScanSpeed,
+            'm0r':    missile0ResetToPlayer | 0,
+            'm1':     missile1Enabled | 0,
+            'm1c':    missile1Color,
+            'm1rr':   missile1RecentReset | 0,
+            'm1co':   missile1Counter,
+            'm1sc':   missile1ScanCounter,
+            'm1ss':   missile1ScanSpeed,
+            'm1r':    missile1ResetToPlayer | 0,
+            'b':      ballEnabled | 0,
+            'bd':     ballDelayedEnablement | 0,
+            'bc':     ballColor,
+            'bco':    ballCounter,
+            'bsc':    ballScanCounter,
+            'bss':    ballScanSpeed,
+            'bv':     ballVerticalDelay | 0,
+            'fd':     playfieldDelayedChangeClock,
+            'fdc':    playfieldDelayedChangePart,
+            'fdp':    playfieldDelayedChangePattern,
+            'pds':    btoa(jt.Util.uInt8BiArrayToByteString(playersDelayedSpriteChanges)),
+            'pdc':    playersDelayedSpriteChangesCount,
+            'hb':     hMoveHitBlank | 0,
+            'hc':     hMoveHitClock,
+            'PF0':    PF0,
+            'PF1':    PF1,
+            'PF2':    PF2,
+            'AC0':    AUDC0,
+            'AC1':    AUDC1,
+            'AF0':    AUDF0,
+            'AF1':    AUDF1,
+            'AV0':    AUDV0,
+            'AV1':    AUDV1,
+            'HP0':    HMP0,
+            'HP1':    HMP1,
+            'HM0':    HMM0,
+            'HM1':    HMM1,
+            'HB':     HMBL,
+            'XM0P':   CXM0P,
+            'XM1P':   CXM1P,
+            'XP0F':   CXP0FB,
+            'XP1F':   CXP1FB,
+            'XM0F':   CXM0FB,
+            'XM1F':   CXM1FB,
+            'XBP':    CXBLPF,
+            'XPM':    CXPPMM
         };
     };
 
     this.loadState = function(state) {
-        linePixels						 =  jt.Util.byteStringToUInt32Array(atob(state.lp));
-        lastObservableChangeClock		 =	state.lo;
-        observableChangeExtended		 =  !!state.oc;
-        repeatLastLine 					 =	!!state.rl;
-        vSyncOn                     	 =  !!state.vs;
-        vBlankOn                    	 =  !!state.vb;
-        vBlankDecodeActive				 =  !!state.vbd;
-        vBlankNewState				 	 =  !!state.vbn;
-        playfieldPattern            	 =  jt.Util.byteStringToBooleanArray(state.f);
-        playfieldPatternInvalid     	 =  !!state.fi;
-        playfieldCurrentPixel       	 =  !!state.fp;
-        playfieldColor              	 =  state.fc;
-        playfieldBackground         	 =  state.fb;
-        playfieldReflected          	 =  !!state.fr;
-        playfieldScoreMode          	 =  !!state.fs;
-        playfieldPriority           	 =  !!state.ft;
-        player0ActiveSprite         	 =  state.p0;
-        player0DelayedSprite        	 =  state.p0d;
-        player0Color                	 =  state.p0c;
-        player0RecentReset       	 	 =  !!state.p0rr;
-        player0Counter	            	 =  state.p0co;
-        player0ScanCounter	        	 =  state.p0sc;
-        player0ScanSpeed            	 =  state.p0ss;
-        player0VerticalDelay        	 =  !!state.p0v;
-        player0CloseCopy            	 =  !!state.p0cc;
-        player0MediumCopy           	 =  !!state.p0mc;
-        player0WideCopy             	 =  !!state.p0wc;
-        player0Reflected            	 =  !!state.p0r;
-        player1ActiveSprite         	 =  state.p1;
-        player1DelayedSprite        	 =  state.p1d;
-        player1Color                	 =  state.p1c;
-        player1RecentReset       		 =  !!state.p1rr;
-        player1Counter              	 =  state.p1co;
-        player1ScanCounter				 =  state.p1sc;
-        player1ScanSpeed				 =  state.p1ss;
-        player1VerticalDelay        	 =  !!state.p1v;
-        player1CloseCopy            	 =  !!state.p1cc;
-        player1MediumCopy           	 =  !!state.p1mc;
-        player1WideCopy             	 =  !!state.p1wc;
-        player1Reflected            	 =  !!state.p1r;
-        missile0Enabled             	 =  !!state.m0;
-        missile0Color               	 =  state.m0c;
-        missile0RecentReset      	 	 =  !!state.m0rr;
-        missile0Counter             	 =  state.m0co;
-        missile0ScanCounter         	 =  state.m0sc;
-        missile0ScanSpeed				 =  state.m0ss;
-        missile0ResetToPlayer			 =  !!state.m0r;
-        missile1Enabled             	 =  !!state.m1;
-        missile1Color               	 =  state.m1c;
-        missile1RecentReset      	 	 =  !!state.m1rr;
-        missile1Counter             	 =  state.m1co;
-        missile1ScanCounter         	 =  state.m1sc;
-        missile1ScanSpeed				 =  state.m1ss;
-        missile1ResetToPlayer			 =  !!state.m1r;
-        ballEnabled                 	 =  !!state.b;
-        ballDelayedEnablement       	 =  !!state.bd;
-        ballColor                   	 =  state.bc;
-        ballCounter                 	 =  state.bco;
-        ballScanCounter             	 =  state.bsc;
-        ballScanSpeed					 =  state.bss;
-        ballVerticalDelay           	 =  !!state.bv;
-        playfieldDelayedChangeClock		 =  state.fd;
-        playfieldDelayedChangePart		 =  state.fdc;
-        playfieldDelayedChangePattern	 =  state.fdp;
-        playersDelayedSpriteChanges      =  jt.Util.byteStringToUInt8BiArray(atob(state.pds), 3);
-        playersDelayedSpriteChangesCount =  state.pdc;
-        hMoveHitBlank					 =  !!state.hb;
-        hMoveHitClock					 =  state.hc;
-        PF0								 =  state.PF0;
-        PF1								 =  state.PF1;
-        PF2								 =  state.PF2;
-        AUDC0							 =  state.AC0; audioSignal.getChannel0().setControl(AUDC0 & 0x0f);		// Also update the Audio Generator
-        AUDC1							 =  state.AC1; audioSignal.getChannel1().setControl(AUDC1 & 0x0f);
-        AUDF0							 =  state.AF0; audioSignal.getChannel0().setDivider((AUDF0 & 0x1f) + 1);
-        AUDF1							 =  state.AF1; audioSignal.getChannel1().setDivider((AUDF1 & 0x1f) + 1);
-        AUDV0							 =  state.AV0; audioSignal.getChannel0().setVolume(AUDV0 & 0x0f);
-        AUDV1							 =  state.AV1; audioSignal.getChannel1().setVolume(AUDV1 & 0x0f);
-        HMP0							 =  state.HP0;
-        HMP1							 =  state.HP1;
-        HMM0							 =  state.HM0;
-        HMM1							 =  state.HM1;
-        HMBL							 =  state.HB;
-        CXM0P 							 =  state.XM0P;
-        CXM1P 							 =  state.XM1P;
-        CXP0FB							 =  state.XP0F;
-        CXP1FB							 =  state.XP1F;
-        CXM0FB							 =  state.XM0F;
-        CXM1FB							 =  state.XM1F;
-        CXBLPF							 =  state.XBP;
-        CXPPMM							 =  state.XPM;
+        linePixels						 =  jt.Util.byteStringToUInt32Array(atob(state['lp']));
+        lastObservableChangeClock		 =	state['lo'];
+        observableChangeExtended		 =  !!state['oc'];
+        repeatLastLine 					 =	!!state['rl'];
+        vSyncOn                     	 =  !!state['vs'];
+        vBlankOn                    	 =  !!state['vb'];
+        vBlankDecodeActive				 =  !!state['vbd'];
+        vBlankNewState				 	 =  !!state['vbn'];
+        playfieldPattern            	 =  jt.Util.byteStringToBooleanArray(state['f']);
+        playfieldPatternInvalid     	 =  !!state['fi'];
+        playfieldCurrentPixel       	 =  !!state['fp'];
+        playfieldColor              	 =  state['fc'];
+        playfieldBackground         	 =  state['fb'];
+        playfieldReflected          	 =  !!state['fr'];
+        playfieldScoreMode          	 =  !!state['fs'];
+        playfieldPriority           	 =  !!state['ft'];
+        player0ActiveSprite         	 =  state['p0'];
+        player0DelayedSprite        	 =  state['p0d'];
+        player0Color                	 =  state['p0c'];
+        player0RecentReset       	 	 =  !!state['p0rr'];
+        player0Counter	            	 =  state['p0co'];
+        player0ScanCounter	        	 =  state['p0sc'];
+        player0ScanSpeed            	 =  state['p0ss'];
+        player0VerticalDelay        	 =  !!state['p0v'];
+        player0CloseCopy            	 =  !!state['p0cc'];
+        player0MediumCopy           	 =  !!state['p0mc'];
+        player0WideCopy             	 =  !!state['p0wc'];
+        player0Reflected            	 =  !!state['p0r'];
+        player1ActiveSprite         	 =  state['p1'];
+        player1DelayedSprite        	 =  state['p1d'];
+        player1Color                	 =  state['p1c'];
+        player1RecentReset       		 =  !!state['p1rr'];
+        player1Counter              	 =  state['p1co'];
+        player1ScanCounter				 =  state['p1sc'];
+        player1ScanSpeed				 =  state['p1ss'];
+        player1VerticalDelay        	 =  !!state['p1v'];
+        player1CloseCopy            	 =  !!state['p1cc'];
+        player1MediumCopy           	 =  !!state['p1mc'];
+        player1WideCopy             	 =  !!state['p1wc'];
+        player1Reflected            	 =  !!state['p1r'];
+        missile0Enabled             	 =  !!state['m0'];
+        missile0Color               	 =  state['m0c'];
+        missile0RecentReset      	 	 =  !!state['m0rr'];
+        missile0Counter             	 =  state['m0co'];
+        missile0ScanCounter         	 =  state['m0sc'];
+        missile0ScanSpeed				 =  state['m0ss'];
+        missile0ResetToPlayer			 =  !!state['m0r'];
+        missile1Enabled             	 =  !!state['m1'];
+        missile1Color               	 =  state['m1c'];
+        missile1RecentReset      	 	 =  !!state['m1rr'];
+        missile1Counter             	 =  state['m1co'];
+        missile1ScanCounter         	 =  state['m1sc'];
+        missile1ScanSpeed				 =  state['m1ss'];
+        missile1ResetToPlayer			 =  !!state['m1r'];
+        ballEnabled                 	 =  !!state['b'];
+        ballDelayedEnablement       	 =  !!state['bd'];
+        ballColor                   	 =  state['bc'];
+        ballCounter                 	 =  state['bco'];
+        ballScanCounter             	 =  state['bsc'];
+        ballScanSpeed					 =  state['bss'];
+        ballVerticalDelay           	 =  !!state['bv'];
+        playfieldDelayedChangeClock		 =  state['fd'];
+        playfieldDelayedChangePart		 =  state['fdc'];
+        playfieldDelayedChangePattern	 =  state['fdp'];
+        playersDelayedSpriteChanges      =  jt.Util.byteStringToUInt8BiArray(atob(state['pds']), 3);
+        playersDelayedSpriteChangesCount =  state['pdc'];
+        hMoveHitBlank					 =  !!state['hb'];
+        hMoveHitClock					 =  state['hc'];
+        PF0								 =  state['PF0'];
+        PF1								 =  state['PF1'];
+        PF2								 =  state['PF2'];
+        AUDC0							 =  state['AC0']; audioSignal.getChannel0().setControl(AUDC0 & 0x0f);		// Also update the Audio Generator
+        AUDC1							 =  state['AC1']; audioSignal.getChannel1().setControl(AUDC1 & 0x0f);
+        AUDF0							 =  state['AF0']; audioSignal.getChannel0().setDivider((AUDF0 & 0x1f) + 1);
+        AUDF1							 =  state['AF1']; audioSignal.getChannel1().setDivider((AUDF1 & 0x1f) + 1);
+        AUDV0							 =  state['AV0']; audioSignal.getChannel0().setVolume(AUDV0 & 0x0f);
+        AUDV1							 =  state['AV1']; audioSignal.getChannel1().setVolume(AUDV1 & 0x0f);
+        HMP0							 =  state['HP0'];
+        HMP1							 =  state['HP1'];
+        HMM0							 =  state['HM0'];
+        HMM1							 =  state['HM1'];
+        HMBL							 =  state['HB'];
+        CXM0P 							 =  state['XM0P'];
+        CXM1P 							 =  state['XM1P'];
+        CXP0FB							 =  state['XP0F'];
+        CXP1FB							 =  state['XP1F'];
+        CXM0FB							 =  state['XM0F'];
+        CXM1FB							 =  state['XM1F'];
+        CXBLPF							 =  state['XBP'];
+        CXPPMM							 =  state['XPM'];
         if (debug) debugSetColors();						// IF debug is on, ensure debug colors are used
     };
 

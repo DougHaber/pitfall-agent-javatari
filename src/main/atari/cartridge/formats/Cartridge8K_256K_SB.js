@@ -28,20 +28,20 @@ jt.Cartridge8K_256K_SB = function(rom, format) {
 
     this.saveState = function() {
         return {
-            f: this.format.name,
-            r: this.rom.saveState(),
-            b: btoa(jt.Util.uInt8ArrayToByteString(bytes)),
-            bo: bankAddressOffset,
-            m: maxBank
+            'f': this.format.name,
+            'r': this.rom.saveState(),
+            'b': btoa(jt.Util.uInt8ArrayToByteString(bytes)),
+            'bo': bankAddressOffset,
+            'm': maxBank
         };
     };
 
     this.loadState = function(state) {
-        this.format = jt.CartridgeFormats[state.f];
-        this.rom = jt.ROM.loadState(state.r);
-        bytes = jt.Util.byteStringToUInt8Array(atob(state.b));
-        bankAddressOffset = state.bo;
-        maxBank = state.m;
+        this.format = jt.CartridgeFormats[state['f']];
+        this.rom = jt.ROM.loadState(state['r']);
+        bytes = jt.Util.byteStringToUInt8Array(atob(state['b']));
+        bankAddressOffset = state['bo'];
+        maxBank = state['m'];
     };
 
 

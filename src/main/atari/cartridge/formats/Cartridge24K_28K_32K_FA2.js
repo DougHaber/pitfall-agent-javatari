@@ -115,27 +115,27 @@ jt.Cartridge24K_28K_32K_FA2 = function(rom, format, pRomStartAddress) {
 
     this.saveState = function() {
         return {
-            f: this.format.name,
-            r: this.rom.saveState(),
-            b: btoa(jt.Util.uInt8ArrayToByteString(bytes)),
-            rs: romStartAddress,
-            bo: bankAddressOffset,
-            tb: topBankSwitchAddress,
-            e: btoa(jt.Util.uInt8ArrayToByteString(extraRAM)),
-            ho: harmonyFlashOpInProgress,
-            ht: harmonyFlashOpStartTime
+            'f': this.format.name,
+            'r': this.rom.saveState(),
+            'b': btoa(jt.Util.uInt8ArrayToByteString(bytes)),
+            'rs': romStartAddress,
+            'bo': bankAddressOffset,
+            'tb': topBankSwitchAddress,
+            'e': btoa(jt.Util.uInt8ArrayToByteString(extraRAM)),
+            'ho': harmonyFlashOpInProgress,
+            'ht': harmonyFlashOpStartTime
         };
     };
 
     this.loadState = function(state) {
-        this.format = jt.CartridgeFormats[state.f];
-        this.rom = jt.ROM.loadState(state.r);
-        bytes = jt.Util.byteStringToUInt8Array(atob(state.b));
-        romStartAddress = state.rs || 0;
-        bankAddressOffset = state.bo;
-        topBankSwitchAddress =  state.tb;
-        extraRAM = jt.Util.byteStringToUInt8Array(atob(state.e));
-        harmonyFlashOpInProgress = state.ho || 0;
+        this.format = jt.CartridgeFormats[state['f']];
+        this.rom = jt.ROM.loadState(state['r']);
+        bytes = jt.Util.byteStringToUInt8Array(atob(state['b']));
+        romStartAddress = state['rs'] || 0;
+        bankAddressOffset = state['bo'];
+        topBankSwitchAddress =  state['tb'];
+        extraRAM = jt.Util.byteStringToUInt8Array(atob(state['e']));
+        harmonyFlashOpInProgress = state['ho'] || 0;
         harmonyFlashOpStartTime = Date.now();   // Always as if operation just started
     };
 

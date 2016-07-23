@@ -1750,20 +1750,22 @@ jt.M6502 = function() {
 
     this.saveState = function() {
         return {
-            PC: PC, A: A, X: X, Y: Y, SP: SP,
-            N: N, V: V, D: D, I: I, Z: Z, C: C,
-            T: T, o: opcode, R: RDY | 0,
-            d: data, AD: AD, BA: BA, BC: BALCrossed | 0, IA: IA,
-            bo: branchOffset, boa: branchOffsetCrossAdjust
+            'PC': PC, 'A': A, 'X': X, 'Y': Y, 'SP': SP,
+            'N': N, 'V': V, 'D': D, 'I': I, 'Z': Z, 'C': C,
+            'T': T, 'o': opcode,'R': RDY | 0,
+            'd': data, 'AD': AD,' BA': BA, 'BC': BALCrossed | 0, 'IA': IA,
+            'bo': branchOffset, 'boa': branchOffsetCrossAdjust,
+	    'numCycles': numCycles
         };
     };
 
     this.loadState = function(state) {
-        PC = state.PC; A = state.A; X = state.X; Y = state.Y; SP = state.SP;
-        N = state.N; V = state.V; D = state.D; I = state.I; Z = state.Z; C = state.C;
-        T = state.T; opcode = state.o; RDY = !!state.R;
-        data = state.d; AD = state.AD; BA = state.BA; BALCrossed = !!state.BC; IA = state.IA;
-        branchOffset = state.bo; branchOffsetCrossAdjust = state.boa;
+        PC = state['PC']; A = state['A']; X = state['X']; Y = state['Y']; SP = state['SP'];
+        N = state['N']; V = state['V']; D = state['D']; I = state['I']; Z = state['Z']; C = state['C'];
+        T = state['T']; opcode = state['o']; RDY = !!state['R'];
+        data = state['d']; AD = state['AD']; BA = state['BA']; BALCrossed = !!state['BC']; IA = state['IA'];
+        branchOffset = state['bo']; branchOffsetCrossAdjust = state['boa'];
+	numCycles = state['numCycles'];
 
         instruction = instructions[opcode];
     };

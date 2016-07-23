@@ -14,9 +14,9 @@ jt.CartridgeDatabase = function() {
     };
 
     this.createCartridgeFromSaveState = function(saveState) {
-        var cartridgeFormat = jt.CartridgeFormats[saveState.f];
+        var cartridgeFormat = jt.CartridgeFormats[saveState['f']];
         if (!cartridgeFormat) {
-            var ex = new Error ("Unsupported ROM Format: " + saveState.f);
+            var ex = new Error ("Unsupported ROM Format: " + saveState['f']);
             ex.javatari = true;
             throw ex;
         }

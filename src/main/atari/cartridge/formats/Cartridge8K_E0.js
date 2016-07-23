@@ -48,22 +48,22 @@ jt.Cartridge8K_E0 = function(rom, format) {
 
     this.saveState = function() {
         return {
-            f: this.format.name,
-            r: this.rom.saveState(),
-            b: btoa(jt.Util.uInt8ArrayToByteString(bytes)),
-            s0: slice0AddressOffset,
-            s1: slice1AddressOffset,
-            s2: slice2AddressOffset
+            'f': this.format.name,
+            'r': this.rom.saveState(),
+            'b': btoa(jt.Util.uInt8ArrayToByteString(bytes)),
+            's0': slice0AddressOffset,
+            's1': slice1AddressOffset,
+            's2': slice2AddressOffset
         };
     };
 
     this.loadState = function(state) {
-        this.format = jt.CartridgeFormats[state.f];
-        this.rom = jt.ROM.loadState(state.r);
-        bytes = jt.Util.byteStringToUInt8Array(atob(state.b));
-        slice0AddressOffset = state.s0;
-        slice1AddressOffset = state.s1;
-        slice2AddressOffset = state.s2;
+        this.format = jt.CartridgeFormats[state['f']];
+        this.rom = jt.ROM.loadState(state['r']);
+        bytes = jt.Util.byteStringToUInt8Array(atob(state['b']));
+        slice0AddressOffset = state['s0'];
+        slice1AddressOffset = state['s1'];
+        slice2AddressOffset = state['s2'];
     };
 
 

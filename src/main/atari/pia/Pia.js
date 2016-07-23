@@ -131,36 +131,36 @@ jt.Pia = function() {
 
     this.saveState = function() {
         return {
-            t:          timerCount,
-            c:          currentTimerInterval,
-            l:          lastSetTimerInterval,
-            SA:         SWCHA,
-            SAC:        SWACNT,
-            SB:         SWCHB,
-            SBC:        SWBCNT,
-            IT:         INTIM,
-            IS:         INSTAT,
-            T1:         TIM1T,
-            T8:         TIM8T,
-            T6:         TIM64T,
-            T2:         T1024T
+            't':          timerCount,
+            'c':          currentTimerInterval,
+            'l':          lastSetTimerInterval,
+            'SA':         SWCHA,
+            'SAC':        SWACNT,
+            'SB':         SWCHB,
+            'SBC':        SWBCNT,
+            'IT':         INTIM,
+            'IS':         INSTAT,
+            'T1':         TIM1T,
+            'T8':         TIM8T,
+            'T6':         TIM64T,
+            'T2':         T1024T
         };
     };
 
     this.loadState = function(state) {
-        timerCount           = state.t;
-        currentTimerInterval = state.c;
-        lastSetTimerInterval = state.l;
-        // SWCHA           	 = state.SA;			// Do not load controls state
-        SWACNT               = state.SAC;
-        SWCHB                = state.SB;
-        SWBCNT               = state.SBC;
-        INTIM                = state.IT;
-        INSTAT               = state.IS;
-        TIM1T                = state.T1;
-        TIM8T                = state.T8;
-        TIM64T               = state.T6;
-        T1024T               = state.T2;
+        timerCount           = state['t'];
+        currentTimerInterval = state['c'];
+        lastSetTimerInterval = state['l'];
+        // SWCHA           	 = state['SA'];			// Do not load controls state
+        SWACNT               = state['SAC'];
+        SWCHB                = state['SB'];
+        SWBCNT               = state['SBC'];
+        INTIM                = state['IT'];
+        INSTAT               = state['IS'];
+        TIM1T                = state['T1'];
+        TIM8T                = state['T8'];
+        TIM64T               = state['T6'];
+        T1024T               = state['T2'];
     };
 
 

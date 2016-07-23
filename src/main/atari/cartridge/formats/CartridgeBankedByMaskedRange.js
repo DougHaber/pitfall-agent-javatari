@@ -59,30 +59,30 @@ jt.CartridgeBankedByMaskedRange = function(rom, format, pBaseBankSwitchAddress, 
 
     this.saveState = function() {
         return {
-            f: this.format.name,
-            r: this.rom.saveState(),
-            b: btoa(jt.Util.uInt8ArrayToByteString(bytes)),
-            bo: bankAddressOffset,
-            bb: baseBankSwitchAddress,
-            es: extraRAMSize,
-            tb: topBankSwitchAddress,
-            s: superChipMode | 0,
-            sa: superChipAutoDetect | 0,
-            e: extraRAM && btoa(jt.Util.uInt8ArrayToByteString(extraRAM))
+            'f': this.format.name,
+            'r': this.rom.saveState(),
+            'b': btoa(jt.Util.uInt8ArrayToByteString(bytes)),
+            'bo': bankAddressOffset,
+            'bb': baseBankSwitchAddress,
+            'es': extraRAMSize,
+            'tb': topBankSwitchAddress,
+            's': superChipMode | 0,
+            'sa': superChipAutoDetect | 0,
+            'e': extraRAM && btoa(jt.Util.uInt8ArrayToByteString(extraRAM))
         };
     };
 
     this.loadState = function(state) {
-        this.format = jt.CartridgeFormats[state.f];
-        this.rom = jt.ROM.loadState(state.r);
-        bytes = jt.Util.byteStringToUInt8Array(atob(state.b));
-        bankAddressOffset = state.bo;
-        baseBankSwitchAddress = state.bb;
-        extraRAMSize = state.es;
-        topBankSwitchAddress =  state.tb;
-        superChipMode = !!state.s;
-        superChipAutoDetect = !!state.sa;
-        extraRAM = state.e && jt.Util.byteStringToUInt8Array(atob(state.e));
+        this.format = jt.CartridgeFormats[state['f']];
+        this.rom = jt.ROM.loadState(state['r']);
+        bytes = jt.Util.byteStringToUInt8Array(atob(state['b']));
+        bankAddressOffset = state['bo'];
+        baseBankSwitchAddress = state['bb'];
+        extraRAMSize = state['es'];
+        topBankSwitchAddress =  state['tb'];
+        superChipMode = !!state['s'];
+        superChipAutoDetect = !!state['sa'];
+        extraRAM = state['e'] && jt.Util.byteStringToUInt8Array(atob(state['e']));
     };
 
 

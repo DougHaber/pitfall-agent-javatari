@@ -12,8 +12,8 @@ jt.ROM = function(source, content, info) {
 
     this.saveState = function() {
         return {
-            s: this.source,
-            i: this.info
+            's': this.source,
+            'i': this.info
             // content not needed in savestates
         };
     };
@@ -21,5 +21,5 @@ jt.ROM = function(source, content, info) {
 };
 
 jt.ROM.loadState = function(state) {
-    return new jt.ROM(state.s, null, state.i);
+    return new jt.ROM(state['s'], null, state['i']);
 };

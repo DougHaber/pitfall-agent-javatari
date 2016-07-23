@@ -35,22 +35,22 @@ jt.Cartridge8K_512K_3F = function(rom, format) {
 
     this.saveState = function() {
         return {
-            f: this.format.name,
-            r: this.rom.saveState(),
-            b: btoa(jt.Util.uInt8ArrayToByteString(bytes)),
-            bo: bankAddressOffset,
-            sm: selectableSliceMaxBank,
-            fo: fixedSliceAddressOffset
+            'f': this.format.name,
+            'r': this.rom.saveState(),
+            'b': btoa(jt.Util.uInt8ArrayToByteString(bytes)),
+            'bo': bankAddressOffset,
+            'sm': selectableSliceMaxBank,
+            'fo': fixedSliceAddressOffset
         };
     };
 
     this.loadState = function(state) {
-        this.format = jt.CartridgeFormats[state.f];
-        this.rom = jt.ROM.loadState(state.r);
-        bytes = jt.Util.byteStringToUInt8Array(atob(state.b));
-        bankAddressOffset = state.bo;
-        selectableSliceMaxBank = state.sm;
-        fixedSliceAddressOffset = state.fo;
+        this.format = jt.CartridgeFormats[state['f']];
+        this.rom = jt.ROM.loadState(state['r']);
+        bytes = jt.Util.byteStringToUInt8Array(atob(state['b']));
+        bankAddressOffset = state['bo'];
+        selectableSliceMaxBank = state['sm'];
+        fixedSliceAddressOffset = state['fo'];
     };
 
 

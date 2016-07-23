@@ -60,26 +60,26 @@ jt.Cartridge8K_512K_3E = function(rom, format) {
 
     this.saveState = function() {
         return {
-            f: this.format.name,
-            r: this.rom.saveState(),
-            b: btoa(jt.Util.uInt8ArrayToByteString(bytes)),
-            bo: bankAddressOffset,
-            sm: selectableSliceMaxBank,
-            fo: fixedSliceAddressOffset,
-            ro: extraRAMBankAddressOffset,
-            ra: btoa(jt.Util.uInt8ArrayToByteString(extraRAM))
+            'f': this.format.name,
+            'r': this.rom.saveState(),
+            'b': btoa(jt.Util.uInt8ArrayToByteString(bytes)),
+            'bo': bankAddressOffset,
+            'sm': selectableSliceMaxBank,
+            'fo': fixedSliceAddressOffset,
+            'ro': extraRAMBankAddressOffset,
+            'ra': btoa(jt.Util.uInt8ArrayToByteString(extraRAM))
         };
     };
 
     this.loadState = function(state) {
-        this.format = jt.CartridgeFormats[state.f];
-        this.rom = jt.ROM.loadState(state.r);
-        bytes = jt.Util.byteStringToUInt8Array(atob(state.b));
-        bankAddressOffset = state.bo;
-        selectableSliceMaxBank = state.sm;
-        fixedSliceAddressOffset = state.fo;
-        extraRAMBankAddressOffset = state.ro;
-        extraRAM = jt.Util.byteStringToUInt8Array(atob(state.ra));
+        this.format = jt.CartridgeFormats[state['f']];
+        this.rom = jt.ROM.loadState(state['r']);
+        bytes = jt.Util.byteStringToUInt8Array(atob(state['b']));
+        bankAddressOffset = state['bo'];
+        selectableSliceMaxBank = state['sm'];
+        fixedSliceAddressOffset = state['fo'];
+        extraRAMBankAddressOffset = state['ro'];
+        extraRAM = jt.Util.byteStringToUInt8Array(atob(state['ra']));
     };
 
 

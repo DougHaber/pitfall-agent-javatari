@@ -39,18 +39,18 @@ jt.Cartridge2K_CV = function(rom, format) {
 
     this.saveState = function() {
         return {
-            f: this.format.name,
-            r: this.rom.saveState(),
-            b: btoa(jt.Util.uInt8ArrayToByteString(bytes)),
-            ra: btoa(jt.Util.uInt8ArrayToByteString(extraRAM))
+            'f': this.format.name,
+            'r': this.rom.saveState(),
+            'b': btoa(jt.Util.uInt8ArrayToByteString(bytes)),
+            'ra': btoa(jt.Util.uInt8ArrayToByteString(extraRAM))
         };
     };
 
     this.loadState = function(state) {
-        this.format = jt.CartridgeFormats[state.f];
-        this.rom = jt.ROM.loadState(state.r);
-        bytes = jt.Util.byteStringToUInt8Array(atob(state.b));
-        extraRAM = jt.Util.byteStringToUInt8Array(atob(state.ra));
+        this.format = jt.CartridgeFormats[state['f']];
+        this.rom = jt.ROM.loadState(state['r']);
+        bytes = jt.Util.byteStringToUInt8Array(atob(state['b']));
+        extraRAM = jt.Util.byteStringToUInt8Array(atob(state['ra']));
     };
 
 
