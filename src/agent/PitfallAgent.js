@@ -679,7 +679,6 @@ function PitfallAgent(atariConsole) {
     this.initUI = function() {
         var controlsDiv = document.createElement('div');
 
-
         controlsDiv.style.textAlign = 'center';
 
         // Add the checkboxes
@@ -687,7 +686,7 @@ function PitfallAgent(atariConsole) {
             self.setFastMode(event.target.checked);
         }));
 
-        controlsDiv.appendChild(this.createCheckbox('Use Checkpoints', true, function() {
+        controlsDiv.appendChild(this.createCheckbox('Use Checkpoints', true, function(event) {
             self.setQuickTrainMode(event.target.checked);
         }));
 
