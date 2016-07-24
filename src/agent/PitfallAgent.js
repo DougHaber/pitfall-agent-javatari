@@ -268,16 +268,17 @@ function PitfallAgent(atariConsole) {
     this.pulse = function(cpuCycle) {
         // Called every time the CPU pulses
         // This is used for injecting input
-        var currentCommand = this.commands[this.currentCommandIndex];
+        var commands = this.commands;
+        var currentCommand;
 
         this.cpuCycle = cpuCycle;
 
-        if (currentCommand) {
-            if (currentCommand.cycle <= this.cpuCycle) { // Send the next prepared command
+        while ((currentCommand = commands[this.currentCommandIndex]) &&
+               currentCommand.cycle <= cpuCycle) { // Send the next prepared command
                 this.executeCommand();
-            }
         }
-        else if (this.cpuCycle >= this.nextCommandCycle) { // Start a new command
+
+        if (cpuCycle >= this.nextCommandCycle) { // Start a new command
             this.chooseNextCommand(this.cpuCycle + 1);
         }
     };
