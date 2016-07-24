@@ -12,6 +12,7 @@ jt.M6502 = function() {
 
     var PC_watch_address = undefined; // Program Counter address to watch
     var PC_watch_callback = undefined; // Function to call when a match occurs
+    var PC_watch_lastCycle = undefined; // Last cycle where callback occurred
 
     this.setPCWatchCallback = function(address, handler) {
 	PC_watch_address = address;
@@ -29,10 +30,12 @@ jt.M6502 = function() {
         numCycles++;
 
 	if (PC_watch_callback && PC_watch_address == PC) {
-	    if (PC_watch_callback(numCycles)) {
-		// The callback returns true when the CPU was reset within it.
-		return;
-	    }
+            // Call the callback as long as this match hasn't occurred consecutively.
+            if (numCycles - 1 != PC_watch_lastCycle) {
+                PC_watch_callback(numCycles);
+            }
+
+            PC_watch_lastCycle = numCycles;
 	}
 
         if (this.onClockPulse) {
@@ -54,6 +57,7 @@ jt.M6502 = function() {
         I = 1;
         T = -1;
         numCycles = 0;
+        PC_watch_lastCycle = undefined;
         instruction = [ fetchOpcodeAndDecodeInstruction ];    // Bootstrap instruction
         PC = bus.read(RESET_VECTOR) | (bus.read(RESET_VECTOR + 1) << 8);
         this.setRDY(true);
