@@ -512,6 +512,9 @@ jt.AtariConsole = function() {
 	return bus;
     };
 
+    this.getClock = function() {
+	return mainClock;
+    };
 
 
     init();
