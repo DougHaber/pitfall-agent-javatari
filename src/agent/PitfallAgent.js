@@ -143,7 +143,7 @@ function PitfallAgent(atariConsole) {
         var currentScore = this.getScore();
 
         if (currentScore < this.lastScore || ! this.isPlayerAboveGround()) {
-            this.reset();
+	    this.clock.pauseOnNextPulse(function() { self.reset(); });
 
             return true;
         }
@@ -440,6 +440,8 @@ function PitfallAgent(atariConsole) {
 	    this.cpu.reset();
         }
 
+	this.clock.go()
+
         this.log(1, "* RESET numResets=%o, retriesRemaining=%o, screen=%o",
                  this.numResets, settings.numResetsWithoutProgress - this.numResetsWithoutProgress, this.screenNumber);
 
@@ -525,7 +527,13 @@ function PitfallAgent(atariConsole) {
             this.numResets = state['numResets'];
             this.savedAgentState = undefined;
 
-            this.reset(true);
+	    // To ensure we have the proper starting point, reset he CPU, and then
+	    // wait for a new frame to be drawn.   Then, schedule pause on the next pulse
+	    // so that we can safely do a reset outside of the frame.
+	    this.cpu.reset(true);
+	    this.cpu.setPCWatchCallback(0xF66D, function() {
+		self.clock.pauseOnNextPulse(function() { self.reset(true); });
+	    });
 
             return true;
         }
@@ -716,7 +724,7 @@ function PitfallAgent(atariConsole) {
         controlsDiv.appendChild(this.createButton('Reset Training', function() {
             self.commands.splice(1);
             self.commands[0].execCounter = 0;
-            self.reset(true);
+	    self.clock.pauseOnNextPulse(function() { self.reset(true); });
             self.numResets = 0;
             self.clearLocalStorage();
         }));
@@ -792,6 +800,7 @@ function PitfallAgent(atariConsole) {
         this.ram = atariConsole.getRAM();
         this.cpu = atariConsole.getCPU();
         this.bus = atariConsole.getBus();
+	this.clock = atariConsole.getClock();
 
         // Register a handler so that we get called every clock tick and can inject our commands
         this.cpu.onClockPulse = function(cpuCycle) {
@@ -812,7 +821,7 @@ function PitfallAgent(atariConsole) {
         // Either load the last trained state from localStorage, or start by going right
         if (! this.loadStateFromLocalStorage()) {
             this.scheduleCommand(500000, 'right');
-            this.reset(true);
+	    this.clock.pauseOnNextPulse(function() { self.reset(true); });
         }
     };
 
