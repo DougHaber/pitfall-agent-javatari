@@ -397,11 +397,6 @@ function PitfallAgent(atariConsole) {
 
         currentWorldPosition = commands[commands.length - 1].worldPosition;
 
-        // Remove the most recently added commandGroup
-        this.pruneCommandGroup(commands[commands.length - 1].commandGroup);
-
-        // If we aren't making progress, remove all commandGroups within the last 2 worldPositions.
-        // Do not remove past a checkpoint.
         if (currentWorldPosition <= this.lastRunMaxWorldPosition) {
             this.numResetsWithoutProgress++;
         }
@@ -409,6 +404,11 @@ function PitfallAgent(atariConsole) {
             this.numResetsWithoutProgress = 0;
         }
 
+        // Remove the most recently added commandGroup
+        this.pruneCommandGroup(commands[commands.length - 1].commandGroup);
+
+        // If we aren't making progress, remove all commandGroups within the last 2 worldPositions.
+        // Do not remove past a checkpoint.
         if (this.numResetsWithoutProgress >= settings.numResetsWithoutProgress) {
             while (commands[commands.length - 1].worldPosition >= currentWorldPosition - 1 &&
                    ! commands[commands.length - 1].checkPoint) {
