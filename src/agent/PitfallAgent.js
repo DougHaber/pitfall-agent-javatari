@@ -27,9 +27,9 @@ function PitfallAgent(atariConsole) {
         // Used for the jump and down buttons.
         buttonHoldDuration: 50,
 
-	// After a reset, we wait a random number between 0 and resetNextCommandDelay cycles
-	// before executing our next command.
-	resetNextCommandDelay: 800,
+        // After a reset, we wait a random number between 0 and resetNextCommandDelay cycles
+        // before executing our next command.
+        resetNextCommandDelay: 800,
 
         // ** Behavior Times **
 
@@ -143,7 +143,7 @@ function PitfallAgent(atariConsole) {
         var currentScore = this.getScore();
 
         if (currentScore < this.lastScore || ! this.isPlayerAboveGround()) {
-	    this.clock.pauseOnNextPulse(function() { self.reset(); });
+            this.clock.pauseOnNextPulse(function() { self.reset(); });
 
             return true;
         }
@@ -217,7 +217,7 @@ function PitfallAgent(atariConsole) {
     this.onVSYNC = function(cpuCycle) {
         // Called every time a VSYNC occurs
         // This is used for checking game state
-	// Return true if we reset within the callback.
+        // Return true if we reset within the callback.
         var commands = this.commands;
         var command;
         var screenCheckPoint;
@@ -251,7 +251,7 @@ function PitfallAgent(atariConsole) {
             }
         }
 
-	return (false);
+        return (false);
     };
 
 
@@ -437,10 +437,10 @@ function PitfallAgent(atariConsole) {
         this.clearAllControls(); // Stop pressing on the controls
 
         if (! (quickTrain && this.loadState())) {
-	    this.cpu.reset();
+            this.cpu.reset();
         }
 
-	this.clock.go()
+        this.clock.go()
 
         this.log(1, "* RESET numResets=%o, retriesRemaining=%o, screen=%o",
                  this.numResets, settings.numResetsWithoutProgress - this.numResetsWithoutProgress, this.screenNumber);
@@ -448,7 +448,7 @@ function PitfallAgent(atariConsole) {
         // After a VSYNC, start the game
         this.cpu.setPCWatchCallback(0xF66D, function() {
             self.nextCommandCycle = parseInt(self.commands[self.commands.length - 1].cycle +
-					      1 + (Math.random() * settings.resetNextCommandDelay) * 1000);
+                                              1 + (Math.random() * settings.resetNextCommandDelay) * 1000);
             self.currentScreenId = self.getScreenId();
 
             if (! (quickTrain && self.savedAgentState)) { // Starting from the beginning
@@ -473,26 +473,26 @@ function PitfallAgent(atariConsole) {
 
 
     this.cleanCommandsForSave = function(commands) {
-	// Generate command list with strings for the field names to ensure
-	// consitent saves, even when advanced compilation options are enabled.
-	var newCommands = [];
-	var command;
-	var x;
+        // Generate command list with strings for the field names to ensure
+        // consitent saves, even when advanced compilation options are enabled.
+        var newCommands = [];
+        var command;
+        var x;
 
-	for (x = 0; x < commands.length; x++) {
-	    command = commands[x];
+        for (x = 0; x < commands.length; x++) {
+            command = commands[x];
 
-	    newCommands.push({
-		'cycle': command.cycle,
-		'commandName': command.commandName,
-		'worldPosition': command.worldPosition,
-		'execCounter': command.execCounter,
-		'checkPoint': command.checkPoint,
-		'commandGroup': command.commandGroup
-	    });
-	}
+            newCommands.push({
+                'cycle': command.cycle,
+                'commandName': command.commandName,
+                'worldPosition': command.worldPosition,
+                'execCounter': command.execCounter,
+                'checkPoint': command.checkPoint,
+                'commandGroup': command.commandGroup
+            });
+        }
 
-	return newCommands;
+        return newCommands;
     };
 
 
@@ -527,13 +527,13 @@ function PitfallAgent(atariConsole) {
             this.numResets = state['numResets'];
             this.savedAgentState = undefined;
 
-	    // To ensure we have the proper starting point, reset he CPU, and then
-	    // wait for a new frame to be drawn.   Then, schedule pause on the next pulse
-	    // so that we can safely do a reset outside of the frame.
-	    this.cpu.reset(true);
-	    this.cpu.setPCWatchCallback(0xF66D, function() {
-		self.clock.pauseOnNextPulse(function() { self.reset(true); });
-	    });
+            // To ensure we have the proper starting point, reset he CPU, and then
+            // wait for a new frame to be drawn.   Then, schedule pause on the next pulse
+            // so that we can safely do a reset outside of the frame.
+            this.cpu.reset(true);
+            this.cpu.setPCWatchCallback(0xF66D, function() {
+                self.clock.pauseOnNextPulse(function() { self.reset(true); });
+            });
 
             return true;
         }
@@ -724,7 +724,7 @@ function PitfallAgent(atariConsole) {
         controlsDiv.appendChild(this.createButton('Reset Training', function() {
             self.commands.splice(1);
             self.commands[0].execCounter = 0;
-	    self.clock.pauseOnNextPulse(function() { self.reset(true); });
+            self.clock.pauseOnNextPulse(function() { self.reset(true); });
             self.numResets = 0;
             self.clearLocalStorage();
         }));
@@ -800,7 +800,7 @@ function PitfallAgent(atariConsole) {
         this.ram = atariConsole.getRAM();
         this.cpu = atariConsole.getCPU();
         this.bus = atariConsole.getBus();
-	this.clock = atariConsole.getClock();
+        this.clock = atariConsole.getClock();
 
         // Register a handler so that we get called every clock tick and can inject our commands
         this.cpu.onClockPulse = function(cpuCycle) {
@@ -810,8 +810,8 @@ function PitfallAgent(atariConsole) {
         // Every time there is a VSYNC, call this to update the state
         this.VSYNCCallbackFunction = function(cpuCycle) {
             if (self.inGame) {
-		return self.onVSYNC(cpuCycle);
-	    }
+                return self.onVSYNC(cpuCycle);
+            }
         };
 
         this.initUI();
@@ -821,7 +821,7 @@ function PitfallAgent(atariConsole) {
         // Either load the last trained state from localStorage, or start by going right
         if (! this.loadStateFromLocalStorage()) {
             this.scheduleCommand(500000, 'right');
-	    this.clock.pauseOnNextPulse(function() { self.reset(true); });
+            this.clock.pauseOnNextPulse(function() { self.reset(true); });
         }
     };
 
