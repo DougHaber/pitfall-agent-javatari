@@ -57,9 +57,14 @@ function PitfallAgent(atariConsole) {
 
         chanceOfNoChange: 0.15, // The chance of not altering the current controls
         // Otherwise, if we are on a vine we automatically schedule our releaseVineDuration
-        chanceOfRight: 0.7, // Otherwise, if stopped, the chance of starting to move right
-        chanceOfStop: 0.15 // Otherwise, if going right, the chance of stopping
+        chanceOfRight: 0.75, // Otherwise, if stopped, the chance of starting to move right
+        chanceOfStop: 0.15, // Otherwise, if going right, the chance of stopping
         // Otherwise, we jump.  When stationary, the jump is straight up, otherwise it is to the right.
+
+        // When starting to go right, this is the chance of the right immediately being followed by
+        // another command.  This makes the possibility of things like going right and jumping
+        // together more likely.
+        chanceOfShortRight: 0.5
     };
 
 
@@ -124,7 +129,12 @@ function PitfallAgent(atariConsole) {
         }
         else if (! this.controlStates.right && Math.random() <= settings.chanceOfRight) {
             // If we aren't going right, go right
-            this.scheduleCommand(cpuCycle, 'right');
+            if (Math.random() <= settings.chanceOfShortRight) { // A short right followed by something else
+                this.scheduleCommand(cpuCycle, 'right', undefined, cpuCycle + 100);
+            }
+            else {
+                this.scheduleCommand(cpuCycle, 'right');
+            }
         }
         else if (this.controlStates.right && Math.random() <= settings.chanceOfStop) {
             // If we are going right, stop
