@@ -416,6 +416,9 @@ function PitfallAgent(atariConsole) {
         var currentWorldPosition;
         var prunePosition;
 
+
+
+
         // Remove the current commands group and beyond
         // This cleans any dangling parts (such as jump/jumpRelease) and unexecuted commands
         if (this.currentCommandIndex && commands[this.currentCommandIndex]) {
@@ -476,7 +479,7 @@ function PitfallAgent(atariConsole) {
 
         this.log(1, "* RESET numResets=%o, retriesRemaining=%o, screen=%o, worldPos=%o",
                  this.numResets, settings.numResetsWithoutProgress - this.numResetsWithoutProgress,
-                 this.screenNumber,  this.screenNumber * 10 + this.getXPosition(););
+                 this.screenNumber,  this.screenNumber * 10 + this.getXPosition());
 
         // After a VSYNC, start the game
         this.cpu.setPCWatchCallback(0xF66D, function() {
