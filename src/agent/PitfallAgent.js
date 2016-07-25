@@ -23,7 +23,8 @@ function PitfallAgent(atariConsole) {
         // to a further position.
         numResetsWithoutProgress: 20,
 
-        // The last screen.  This is rare.  Because of the cost, we repeat more than twice
+        // If we enter a screen on a log, we clear out our checkpoint and history for
+        // the last screen.  This is rare.  Because of the cost, we repeat more than twice
         // numResetsWithoutProgress time, to be certain this occurred.
         maxResetsAtScreenStart: 45,
 
