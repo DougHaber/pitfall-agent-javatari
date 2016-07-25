@@ -380,21 +380,15 @@ function PitfallAgent(atariConsole) {
 
     this.scheduleReset = function(doNotPruneHistory) {
         // Schedule a reset to be performed
-        this.clock.pauseOnNextPulse(function() {
-            self.reset(doNotPruneHistory);
-        });
-    };
+        if (! this.inGame) {
+            this.cpu.reset();
+            this.clock.go();
+        }
 
-
-    this.scheduleFullReset = function(doNotPruneHistory) {
-        // Schedule a reset to be performed
-        // To ensure we have the proper starting point, reset he CPU, and then
-        // wait for a new frame to be drawn. Then, schedule pause on the next pulse
-        // so that we can safely do a reset outside of the frame.
-        this.cpu.reset(true);
         this.cpu.setPCWatchCallback(0xF66D, function() {
             self.clock.pauseOnNextPulse(function() {
                 self.reset(doNotPruneHistory);
+                self.clock.go();
             });
         });
     };
@@ -420,6 +414,7 @@ function PitfallAgent(atariConsole) {
         // After a reset, remove some history so that something different is tried on the next run
         var commands = this.commands;
         var currentWorldPosition;
+        var prunePosition;
 
         // Remove the current commands group and beyond
         // This cleans any dangling parts (such as jump/jumpRelease) and unexecuted commands
@@ -430,7 +425,7 @@ function PitfallAgent(atariConsole) {
 
         currentWorldPosition = commands[commands.length - 1].worldPosition;
 
-        if (currentWorldPosition <= this.lastRunMaxWorldPosition) {
+        if (currentWorldPosition <= this.maxWorldPositionSinceLastClean) {
             this.numResetsWithoutProgress++;
         }
         else {
@@ -440,18 +435,24 @@ function PitfallAgent(atariConsole) {
         // Remove the most recently added commandGroup
         this.pruneCommandGroup(commands[commands.length - 1].commandGroup);
 
-        // If we aren't making progress, remove all commandGroups within the last 2 worldPositions.
+        // If we aren't making progress, remove all commandGroups within several worldPositions.
         // Do not remove past a checkpoint.
         if (this.numResetsWithoutProgress >= settings.numResetsWithoutProgress) {
-            while (commands[commands.length - 1].worldPosition >= currentWorldPosition - 1 &&
+            // We removed between 1 and 3, randomly.
+            prunePosition = currentWorldPosition - parseInt(Math.random() * 3 + 1);
+
+            while (commands[commands.length - 1].worldPosition >= prunePosition &&
                    ! commands[commands.length - 1].checkPoint) {
                 this.pruneCommandGroup(commands[commands.length - 1].commandGroup);
             }
 
+            this.maxWorldPositionSinceLastClean = 0;
             this.numResetsWithoutProgress = 0;
         }
 
-        this.lastRunMaxWorldPosition = currentWorldPosition;
+        if (currentWorldPosition > this.maxWorldPositionSinceLastClean) {
+            this.maxWorldPositionSinceLastClean = currentWorldPosition;
+        }
     };
 
 
@@ -472,8 +473,6 @@ function PitfallAgent(atariConsole) {
         if (! (quickTrain && this.loadState())) {
             this.cpu.reset();
         }
-
-        this.clock.go()
 
         this.log(1, "* RESET numResets=%o, retriesRemaining=%o, screen=%o",
                  this.numResets, settings.numResetsWithoutProgress - this.numResetsWithoutProgress, this.screenNumber);
@@ -560,7 +559,7 @@ function PitfallAgent(atariConsole) {
             this.numResets = state['numResets'];
             this.savedAgentState = undefined;
 
-            this.scheduleFullReset(true);
+            this.scheduleReset(true);
 
             return true;
         }
@@ -799,7 +798,7 @@ function PitfallAgent(atariConsole) {
         this.numResets = -1; // Start at -1, since reset() is called to begin
         this.numResetsWithoutProgress = 0;
 
-        this.lastRunMaxWorldPosition = 1; // The maxWorldPosition at the end of the last run
+        this.maxWorldPositionSinceLastClean = 1; // Max position since we last removed a section of history
         this.cpuCycle = undefined;
         this.lastScore = 2000;
 
@@ -848,7 +847,7 @@ function PitfallAgent(atariConsole) {
         // Either load the last trained state from localStorage, or start by going right
         if (! this.loadStateFromLocalStorage()) {
             this.scheduleCommand(500000, 'right');
-            this.scheduleFullReset(true);
+            this.scheduleReset(true);
         }
     };
 
