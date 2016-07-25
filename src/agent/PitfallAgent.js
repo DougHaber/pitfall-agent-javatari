@@ -474,8 +474,9 @@ function PitfallAgent(atariConsole) {
             this.cpu.reset();
         }
 
-        this.log(1, "* RESET numResets=%o, retriesRemaining=%o, screen=%o",
-                 this.numResets, settings.numResetsWithoutProgress - this.numResetsWithoutProgress, this.screenNumber);
+        this.log(1, "* RESET numResets=%o, retriesRemaining=%o, screen=%o, worldPos=%o",
+                 this.numResets, settings.numResetsWithoutProgress - this.numResetsWithoutProgress,
+                 this.screenNumber,  this.screenNumber * 10 + this.getXPosition(););
 
         // After a VSYNC, start the game
         this.cpu.setPCWatchCallback(0xF66D, function() {
