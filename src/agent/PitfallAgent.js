@@ -23,6 +23,10 @@ function PitfallAgent(atariConsole) {
         // to a further position.
         numResetsWithoutProgress: 20,
 
+        // The last screen.  This is rare.  Because of the cost, we repeat more than twice
+        // numResetsWithoutProgress time, to be certain this occurred.
+        maxResetsAtScreenStart: 45,
+
         // How long to hold down a single press button or control before releasing.
         // Used for the jump and down buttons.
         buttonHoldDuration: 50,
@@ -393,6 +397,27 @@ function PitfallAgent(atariConsole) {
         });
     };
 
+    this.prunePriorScreen = function() {
+        // Remove the history up until the checkpoint for the prior screen.
+        // Also remove the agent.
+        var x;
+        var commands = this.commands;
+        var numCheckpoints = 0;
+
+        for (x = commands.length - 1; numCheckpoints < 2 && x > 1; x--) {
+            if (commands[x].checkPoint) {
+                numCheckpoints++;
+            }
+        }
+
+        if (numCheckpoints == 2) {
+            commands.splice(x + 2);
+        }
+
+        this.numResetsAtScreenStart = 0;
+        this.savedAgentState = false;
+    };
+
 
     this.pruneCommandGroup = function(targetCommandGroup) {
         // Remove a target command group from the end of the list
@@ -416,9 +441,6 @@ function PitfallAgent(atariConsole) {
         var currentWorldPosition;
         var prunePosition;
 
-
-
-
         // Remove the current commands group and beyond
         // This cleans any dangling parts (such as jump/jumpRelease) and unexecuted commands
         if (this.currentCommandIndex && commands[this.currentCommandIndex]) {
@@ -428,18 +450,34 @@ function PitfallAgent(atariConsole) {
 
         currentWorldPosition = commands[commands.length - 1].worldPosition;
 
+        // Remove the most recently added commandGroup
+        this.pruneCommandGroup(commands[commands.length - 1].commandGroup);
+
+        // Update the number of resets without progress.
+        // If we aren't making progress, remove all commandGroups within several worldPositions.
+        // Do not remove past a checkpoint.
         if (currentWorldPosition <= this.maxWorldPositionSinceLastClean) {
             this.numResetsWithoutProgress++;
+
+            // On rare occasions we may enter a screen and spawn right onto a log.
+            // This is unfortuante, since it means we need to discard our checkpoint and clear history
+            // for the last screen in hopes of finding a safer entry time.
+            var screenPosition = currentWorldPosition - parseInt(currentWorldPosition / 10) * 10;
+
+            if (screenPosition <= 1) {
+                if (++this.numResetsAtScreenStart >= settings.maxResetsAtScreenStart) {
+                    this.prunePriorScreen();
+                    return;
+                }
+            }
+            else {
+                this.numResetsAtScreenStart = 0;
+            }
         }
         else {
             this.numResetsWithoutProgress = 0;
         }
 
-        // Remove the most recently added commandGroup
-        this.pruneCommandGroup(commands[commands.length - 1].commandGroup);
-
-        // If we aren't making progress, remove all commandGroups within several worldPositions.
-        // Do not remove past a checkpoint.
         if (this.numResetsWithoutProgress >= settings.numResetsWithoutProgress) {
             // We removed between 1 and 3, randomly.
             prunePosition = currentWorldPosition - parseInt(Math.random() * 3 + 1);
@@ -477,9 +515,8 @@ function PitfallAgent(atariConsole) {
             this.cpu.reset();
         }
 
-        this.log(1, "* RESET numResets=%o, retriesRemaining=%o, screen=%o, worldPos=%o",
-                 this.numResets, settings.numResetsWithoutProgress - this.numResetsWithoutProgress,
-                 this.screenNumber,  this.screenNumber * 10 + this.getXPosition());
+        this.log(1, "* RESET numResets=%o, retriesRemaining=%o, screen=%o",
+                 this.numResets, settings.numResetsWithoutProgress - this.numResetsWithoutProgress, this.screenNumber);
 
         // After a VSYNC, start the game
         this.cpu.setPCWatchCallback(0xF66D, function() {
@@ -801,6 +838,7 @@ function PitfallAgent(atariConsole) {
         // Resets - The number of times the game state has been moved back
         this.numResets = -1; // Start at -1, since reset() is called to begin
         this.numResetsWithoutProgress = 0;
+        this.numResetsAtScreenStart = 0;
 
         this.maxWorldPositionSinceLastClean = 1; // Max position since we last removed a section of history
         this.cpuCycle = undefined;
