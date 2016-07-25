@@ -294,19 +294,13 @@ function PitfallAgent(atariConsole) {
      ********************************************************************************/
 
     this.getScore = function() {
-        // The score is stored in d6 & d7 as decimal values in hex.
-        // The first 2 digits come from d6, and the second 2 from d7
-        var firstTwoDigits = this.ram.read(0xd6).toString(16);
-        var lastTwoDigits = this.ram.read(0xd7).toString(16);
-
-        if (firstTwoDigits == '0') {
-            return (lastTwoDigits);
-        }
-        else if (lastTwoDigits.length == 1) {
-            lastTwoDigits = "0" + lastTwoDigits;
-        }
-
-        return (parseInt(firstTwoDigits + lastTwoDigits));
+        // The score is stored in d5, d6, and d7 as decimal values in hex.
+        // The first 2 digits come from d5, and the second 2 from d6, and the final from d7
+        return (
+            parseInt(this.ram.read(0xd5).toString(16)) * 10000 +
+            parseInt(this.ram.read(0xd6).toString(16)) * 100 +
+            parseInt(this.ram.read(0xd7).toString(16))
+        );
     };
 
 
