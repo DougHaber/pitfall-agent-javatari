@@ -2,26 +2,29 @@
 
 This repository is a fork of the [Javatari.js](http://javatari.org/) Atari 2600 emulator that has been modified to automatically play the game Pitfall.  An agent controls the player and through trial and error discovers a path through the game.
 
-In its current state this is a proof of concept, no doubt with several bugs and some large improvements just steps away.  The agent logic relies on taking random actions and saving what works.  Given enough time to train it is likely that this could progress far into the Pitfall world.  This is a new release as of January 19th, 2016, and hasn't had much chance to train.  So far it has managed to solve 14 screens.  As it progresses, the status and state files will be updated here.
 
 ![ScreenShot](pitfall-demo.gif)
+
+Here is a demo a trained 20 minute run:
+
+https://www.youtube.com/watch?v=I4j8xWq1Jsc
 
 
 # Usage
 
-A pre-built release is included in the repository and may be run by pointing a browser at a local copy of [release/index.html](release/index.html).  I new release may be built via Grunt. 
+A pre-built release is included in the repository and may be run by pointing a browser at a local copy of [release/index.html](release/index.html).  New releases are built using Grunt.
 
-To start everything up, insert a cartridge.  This will launch the agent and create a small user-interface below the console image.  The cartridge should be a Pitfall ROM.  Anything else won't likely have useful results.
+To start running the Pitfall agent, a cartridge must be inserted into the emulator.  This should be a Pitfall! ROM.  Anything else won't likely have useful results.  Once a cartridge is loaded, the hooks for the agent will begin and a small user interface will be added to the page.
 
 The controls of Javatari have not been disabled.  Using game controls can mess up the training.  For example, if you help Harry jump over a log, your keys won't be recorded, so he may move to the next screen, but he'll never be able to replay his steps back to that point.
 
-Once the game is running there isn't much to do other than watch and check back occasionally.  Some of the screens will be beat in minutes, but the more challenging ones can take many hours to solve.
+Once the game is running there isn't much to do other than watch and check back occasionally.  Some of the screens will be beat in minutes, but the more challenging ones can take hours to solve.  How long it takes depends somewhat on the speed of your computer.  The game has a time limit of 20 minutes, and on a fast system a full run using all that time can be training in less than 12 hours.
 
-A small user interface is added after inserting a cartidge.  This provides checkboxes for determining whether to run at a faster speed and use checkpointing.  Both of these options help the training go faster and are enabled by default.  When running at a faster speed the audio may distort. Checkpointing is used to save the state from the beginning of a screen, so that each training cycle doesn't have to start all the way back at the beginning.
+The agent's user interface is added after inserting a cartidge.  This provides checkboxes for determining whether to run at a faster speed and use checkpointing.  Both of these options help the training go faster and are enabled by default.  When running at a faster speed the audio may distort. Checkpointing is used to save the state from the beginning of a screen, so that each training cycle doesn't have to start all the way back at the beginning.
 
 The UI also provides 3 buttons.  The "Reset Training" button will remove all training data in use and stored by the browser.  The "Download State File" takes the currently checkpointed training state (up to the current screen) and downloads it.
 
-The "Load pitfall-state.json" will load that file from the web server and use its state.  Loading a file requires that that the game be running on an actual webserver, rather than via `file://` URLs.  The repository includes a sample JSON for in this place, and a new one may be created with the "Download State File" button.  The version initially included doesn't go very far, but this will eventually be replaced.
+The "Load pitfall-state.json" will load that file from the web server and use its state.  Loading a file requires that that the game be running on an actual webserver, rather than via `file://` URLs.  The repository includes a sample JSON for in this place, and a new one may be created with the "Download State File" button.  The sample version has a fully train 20 minute run.
 
 
 ## Logging
@@ -37,24 +40,24 @@ By default, some basic logging to the console of the browser is enabled.  The le
 
 The current algorithm begins by holding the joystick right.  It then randomly chooses between five actions for random durations.  These actions include leaving the controls unchanged, standing still by releasing the right control, pressing the right control again, jumping, and pressing down on the joystick to drop from a vine.
 
-The agent is very unaware of the world.  It looks at the score and the player's height, and if either go down, it resets.  This means the agent currently can only play a game on the surface, and that an optimal game where all treasures are gotten in the shortest time is not possible.  In some unfortunate situations the player also may jump over treasure, moving further in the world, but not gaining a higher score.
+The agent is mostly unaware of the world and its obstacles.  It looks at the score and the player's height, and if either go down, it resets.  This means the agent currently can only play a game on the surface, and that an optimal game where all treasures are gotten in the shortest time is not possible.  In some unfortunate situations the player also may jump over treasure, moving further in the world, but not gaining a higher score.
 
 This version has an optimization where the agent is allowed to check if it is on a vine.  To save on wasted actions the down button will only be pressed when on a vine.  This was done to make the training go faster, but for the purists it can easily be disabled.
 
-Pitfall's design includes obstacles (such as the alligators) that can take a very long time to randomly get past with this style.  While the current algorithm demonstrates an easy way to learn to progress through the world, it is definitely possible to modify this to use more interesting machine learning algorithms.
+Pitfall's design includes obstacles (such as the alligators) that can take a long time to randomly get past with this style.  While the current algorithm demonstrates an easy way to learn to progress through the world, it is definitely possible to modify this to use more interesting machine learning algorithms.
 
-The algorithm treats each screen as an independent level to be solved.  Once a screen is solved the instructions for it are solidified.  There is no optimizing, so things like pointless random delays will exist.
+Each screen is treated as an independent level to be solved.  Once a screen is solved the instructions for it are solidified.  There is no optimizing the generated results, so things like pointless random delays will exist.
 
 Random actions are chosen and if they don't help the player get further, they are discarded.  In a situation where they do help the player get further, they may be discarded anyway, since some obstacles (such as the disappearing lakes) would otherwise be impossible.  A solution that makes it further is given a number of tries to progress again, and if it fails, the list of commands is cut back to an earlier point.
 
 
 ## Javatari.js Modifications
 
-Javatari.js was a great platform for writing this on top of. The code was very clean and straightforward.  Some modifications were needed to make this possible.
+The agent was created by building on top of Javatari.js. The code was very clean and straightforward, making it a great platform for developing with.  Some modifications were needed to make this possible.
 
-Some functions were converted to have public interfaces and new functions were added to provide access to private resources (ram, cpu, bus.) Event hooks were added so that we can get a call each CPU cycle (for input injection) and every time the PC matched a value.  The latter was set against a VSYNC completing, and used to check on and update the game state.  A cycle counter was also added, so that we could be sure input was injected at the same point each run.
+Public interfaces and new functions were added to provide access to private resources (ram, cpu, bus.) Event hooks were added so that we can get a call each CPU cycle (for input injection) and every time the PC matched a value.  The latter was set against a VSYNC completing, and used to check on and update the game state.  A cycle counter was also added, so that we could be sure input was injected at the same point each run.
 
-All sources of randomness in Javatari.js were removed in order to keep the emulator completely deterministic.
+Javatari.js had several sources of randomness in it.  Each of these was removed to keep everything fully deterministic.
 
 
 ## Notes on the Internals
@@ -77,6 +80,12 @@ These options can be controlled via the UI or APIs.
 ## Running Simultaneous Copies
 
 Running multiple copies of this or Javatari in the same browser is not supported.  Saved states are placed in localStorage.  Multiple copies of the game will clobber each other's saves and have undesirable results.
+
+## Insta-death
+
+On rare occasions when entering a new screen, the player will land right on top of a log.  This is problematic, since it then falls back to the new screen checkpoint, and loops between the checkpoint and hitting the log.
+
+To deal with this scenario we keep a counter of consecutive deaths at the start of a screen.  If this goes over a limit we remove the history for the current and prior screen.  This forces the player to walk through the entire world again, since we removed the checkpoint.  The agent then is back on the prior screen which it must solve again.   The new solution results in it entering the next screen at a different time, which hopefully means it doesn't start on top of a log.
 
 
 # License
