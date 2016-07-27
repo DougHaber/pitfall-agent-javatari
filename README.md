@@ -5,9 +5,9 @@ This repository is a fork of the [Javatari.js](http://javatari.org/) Atari 2600 
 
 ![ScreenShot](pitfall-demo.gif)
 
-Here is a demo video of a trained 20 minute run: (played at a faster speed)
+* Video of a trained 20 minute run: https://www.youtube.com/watch?v=I4j8xWq1Jsc
+* Video of the training process: https://www.youtube.com/watch?v=DINn-8N9QUw
 
-https://www.youtube.com/watch?v=I4j8xWq1Jsc
 
 
 # Usage
