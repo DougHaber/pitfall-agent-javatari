@@ -232,7 +232,6 @@ function PitfallAgent(atariConsole) {
     this.onVSYNC = function(cpuCycle) {
         // Called every time a VSYNC occurs
         // This is used for checking game state
-        // Return true if we reset within the callback.
         var commands = this.commands;
         var command;
         var screenCheckPoint;
@@ -241,7 +240,7 @@ function PitfallAgent(atariConsole) {
         this.cpuCycle = cpuCycle;
 
         if (this.updateAndCheckState()) {
-            return (true);
+            return;
         }
 
         if (this.getScreenId() != this.currentScreenId) {
@@ -265,8 +264,6 @@ function PitfallAgent(atariConsole) {
                 }
             }
         }
-
-        return (false);
     };
 
 
@@ -872,9 +869,7 @@ function PitfallAgent(atariConsole) {
 
         // Every time there is a VSYNC, call this to update the state
         this.VSYNCCallbackFunction = function(cpuCycle) {
-            if (self.inGame) {
-                return self.onVSYNC(cpuCycle);
-            }
+            self.inGame && self.onVSYNC(cpuCycle);
         };
 
         this.initUI();
