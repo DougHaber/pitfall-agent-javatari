@@ -735,7 +735,7 @@ function PitfallAgent(atariConsole) {
      ********************************************************************************/
 
     this.createCheckbox = function(title, checked, callback) {
-        var wrapper = document.createElement('span');
+        var wrapper = document.createElement('label');
         var input = document.createElement('input');
         var text = document.createElement('span');
 
